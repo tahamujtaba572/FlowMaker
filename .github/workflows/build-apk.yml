@@ -43,28 +43,31 @@ jobs:
             sed -i '/<\/widget>/i \    <icon src="www/icon.png" />' config.xml
           fi
           
-          # Safely append storage permissions & preferences right before </widget> using Python
+          # 4. Safely add permission and preference using a secure single-line python parser
           python3 -c '
-          with open("config.xml", "r") as f:
-              content = f.read()
+          import xml.etree.ElementTree as ET
+          ET.register_namespace("", "http://www.w3.org/ns/widgets")
+          tree = ET.parse("config.xml")
+          root = tree.getroot()
           
-          snippet = """
-              <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/uses-permission[@name=\\"android.permission.WRITE_EXTERNAL_STORAGE\\"]">
-                  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-              </edit-config>
-              <preference name="AndroidInsecureFileModeOverhead" value="true" />
-          </widget>
-          """
+          # Add preference for file mode overhead
+          pref = ET.Element("preference", {"name": "AndroidInsecureFileModeOverhead", "value": "true"})
+          root.append(pref)
           
-          # Replace </widget> cleanly with our snippet which already contains </widget> at the end
-          if "</widget>" in content:
-              content = content.replace("</widget>", snippet, 1)
+          # Add edit-config for storage permission
+          edit_config = ET.Element("edit-config", {
+              "file": "app/src/main/AndroidManifest.xml",
+              "mode": "merge",
+              "target": "/manifest/uses-permission[@name=\"android.permission.WRITE_EXTERNAL_STORAGE\"]"
+          })
+          uses_perm = ET.Element("uses-permission", {"android:name": "android.permission.WRITE_EXTERNAL_STORAGE", "android:maxSdkVersion": "28"})
+          edit_config.append(uses_perm)
+          root.append(edit_config)
           
-          with open("config.xml", "w") as f:
-              f.write(content)
+          tree.write("config.xml", encoding="utf-8", xml_declaration=True)
           '
           
-          # 4. Add Android Platform & Build
+          # 5. Add Android Platform & Build
           cordova platform add android
           cordova build android --debug
 

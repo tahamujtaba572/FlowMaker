@@ -29,22 +29,39 @@ jobs:
           npm install -g cordova
           
           # 1. Create Cordova project
-          cordova create app com.flow.tm "FLOWCHART MAKER "
+          cordova create app com.flow.tm "FC Maker"
           
           # 2. Copy ALL HTML and web files to www folder
           cp -r *.html *.png *.jpg *.jpeg *.css *.js app/www/ 2>/dev/null || true
           
-          # 3. Add Custom Icon and Android Permissions to config.xml
+          # 3. Move to app directory
           cd app
           
-          # Add Storage Permissions inside the widget tag in config.xml
-          sed -i '/<\/widget>/i \    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/uses-permission[@name=\"android.permission.WRITE_EXTERNAL_STORAGE\"]">\n        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />\n    </edit-config>' config.xml
-          sed -i '/<\/widget>/i \    <preference name="AndroidInsecureFileModeOverhead" value="true" />' config.xml
-          
+          # Handle custom icon if it exists
           if [ -f "../icon.png" ]; then
             cp ../icon.png www/icon.png
             sed -i '/<\/widget>/i \    <icon src="www/icon.png" />' config.xml
           fi
+          
+          # Safely append storage permissions & preferences right before </widget>
+          # We use a temporary python snippet or node or python to cleanly inject without sed errors,
+          # or simply append using a clean block if config.xml uses standard closing tags.
+          python3 -c '
+          with open("config.xml", "r") as f:
+              content = f.read()
+          
+          permissions = """
+              <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/uses-permission[@name=\\"android.permission.WRITE_EXTERNAL_STORAGE\\"]">
+                  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+              </edit-config>
+              <preference name="AndroidInsecureFileModeOverhead" value="true" />
+          </widget>
+          """
+          
+          content = content.replace("</widget>", permissions)
+          with open("config.xml", "w") as f:
+              f.write(content)
+          '
           
           # 4. Add Android Platform & Build
           cordova platform add android

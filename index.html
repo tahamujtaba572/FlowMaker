@@ -6,22 +6,38 @@
 <title>Flow Maker — Offline Flowchart Designer</title>
 <style>
   :root{
-    --bg:#eef1f7;--panel:#ffffff;--border:#e3e8f0;--text:#1e293b;--muted:#6b7a90;
-    --accent:#4f46e5;--accent-2:#6366f1;--danger:#e11d48;
+    --bg:#eef1f7;
+    --panel:#ffffff;
+    --border:#e3e8f0;
+    --text:#1e293b;
+    --muted:#6b7a90;
+    --accent:#4f46e5;
+    --accent-2:#6366f1;
+    --danger:#e11d48;
+    --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
-    background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+    background:var(--bg);color:var(--text);overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
   .app{display:flex;flex-direction:column;height:100vh}
 
-  .topbar{height:58px;flex:0 0 58px;display:flex;align-items:center;gap:14px;
+  /* ============ TOP BAR ============ */
+  .topbar{
+    height:58px;flex:0 0 58px;display:flex;align-items:center;gap:14px;
     padding:0 14px;background:var(--panel);border-bottom:1px solid var(--border);
-    box-shadow:0 1px 2px rgba(16,24,40,.04);z-index:70;}
+    box-shadow:0 1px 2px rgba(16,24,40,.04);z-index:70;
+  }
   .brand{display:flex;align-items:center;gap:10px;min-width:190px}
-  .logo{width:32px;height:32px;border-radius:9px;flex:0 0 auto;
-    background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;
-    box-shadow:0 4px 10px rgba(79,70,229,.35);}
+  .logo{
+    width:32px;height:32px;border-radius:9px;flex:0 0 auto;
+    background:linear-gradient(135deg,#6366f1,#4f46e5);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 10px rgba(79,70,229,.35);
+  }
   .logo svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .brand-name{font-size:16px;font-weight:800;letter-spacing:-.3px;line-height:1}
   .brand-name b{color:var(--accent)}
@@ -31,9 +47,11 @@
   .group{display:flex;align-items:center;gap:6px}
   .sep{width:1px;height:24px;background:var(--border)}
 
-  .btn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;
     border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--text);
-    font-size:13px;font-weight:600;cursor:pointer;transition:.15s;white-space:nowrap;}
+    font-size:13px;font-weight:600;cursor:pointer;transition:.15s;white-space:nowrap;
+  }
   .btn:hover{background:#f8fafc;border-color:#cbd5e1}
   .btn:active{transform:translateY(1px)}
   .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 6px rgba(79,70,229,.3)}
@@ -42,56 +60,74 @@
   .btn.ghost:hover{background:#f1f5f9;color:var(--text)}
   .btn.danger{color:var(--danger);border-color:#fecdd3;background:#fff5f6}
   .btn.danger:hover{background:#ffe4e6}
-  .btn.success{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}
-  .btn.success:hover{background:#dcfce7}
 
-  .icon-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;
+  .icon-btn{
+    width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;
     border-radius:9px;border:1px solid transparent;background:transparent;color:var(--muted);
-    cursor:pointer;transition:.15s;flex:0 0 auto;}
+    cursor:pointer;transition:.15s;flex:0 0 auto;
+  }
   .icon-btn:hover{background:#f1f5f9;color:var(--text)}
   .icon-btn:disabled{opacity:.35;cursor:not-allowed}
   .icon-btn:disabled:hover{background:transparent;color:var(--muted)}
   .icon-btn.active{background:#eef2ff;color:var(--accent)}
 
-  .btn svg,.icon-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;
-    stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;}
+  .btn svg,.icon-btn svg{
+    width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;
+  }
 
   .zoombar{display:flex;align-items:center;gap:4px;flex:0 0 auto}
   #zoomLabel{font-size:12px;font-weight:700;color:var(--muted);min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
   .switch{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;margin-left:6px;user-select:none}
   .switch input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
 
+  /* ============ MOBILE TOGGLE BUTTONS ============ */
   .mobile-tools{display:none;gap:4px;align-items:center}
 
+  /* ============ WORKSPACE ============ */
   .workspace{flex:1;display:flex;min-height:0;position:relative}
 
-  .palette{width:206px;flex:0 0 206px;background:var(--panel);border-right:1px solid var(--border);
-    padding:12px;overflow-y:auto;}
-  .panel-title{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
-    color:var(--muted);margin:2px 0 10px;}
+  /* Palette */
+  .palette{
+    width:206px;flex:0 0 206px;background:var(--panel);border-right:1px solid var(--border);
+    padding:12px;overflow-y:auto;
+  }
+  .panel-title{
+    font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+    color:var(--muted);margin:2px 0 10px;
+  }
   .shape-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .shape-item{display:flex;flex-direction:column;align-items:center;gap:4px;
+  .shape-item{
+    display:flex;flex-direction:column;align-items:center;gap:4px;
     padding:8px 4px 6px;border:1px solid var(--border);border-radius:10px;background:#fff;
-    cursor:grab;transition:.15s;user-select:none;}
-  .shape-item:hover{border-color:var(--accent);box-shadow:0 6px 16px rgba(79,70,229,.14);transform:translateY(-1px)}
+    cursor:grab;transition:.15s;user-select:none;
+  }
+  .shape-item:hover{
+    border-color:var(--accent);box-shadow:0 6px 16px rgba(79,70,229,.14);transform:translateY(-1px);
+  }
   .shape-item:active{cursor:grabbing}
   .shape-item svg{width:100%;height:34px;overflow:visible;display:block}
   .shape-item span{font-size:10px;font-weight:700;color:var(--muted);text-align:center;line-height:1.15}
   .hint{font-size:11px;color:var(--muted);line-height:1.45;margin-top:14px;padding-top:12px;border-top:1px dashed var(--border)}
 
-  .canvas-wrap{flex:1;position:relative;overflow:hidden;background-color:#fbfcfe;
+  /* Canvas */
+  .canvas-wrap{
+    flex:1;position:relative;overflow:hidden;background-color:#fbfcfe;
     background-image:
       linear-gradient(rgba(15,23,42,.07) 1px, transparent 1px),
       linear-gradient(90deg, rgba(15,23,42,.07) 1px, transparent 1px),
       linear-gradient(rgba(15,23,42,.035) 1px, transparent 1px),
       linear-gradient(90deg, rgba(15,23,42,.035) 1px, transparent 1px);
-    background-size:50px 50px,50px 50px,10px 10px,10px 10px;}
+    background-size:50px 50px,50px 50px,10px 10px,10px 10px;
+  }
   #svg{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
 
   .node{cursor:move}
   .node .node-text{pointer-events:none}
-  .node .anchor{fill:#fff;stroke:var(--accent);stroke-width:2;cursor:crosshair;
-    opacity:0;transition:opacity .12s;pointer-events:none;}
+  .node .anchor{
+    fill:#fff;stroke:var(--accent);stroke-width:2;cursor:crosshair;
+    opacity:0;transition:opacity .12s;pointer-events:none;
+  }
   .node:hover .anchor,.node.selected .anchor{opacity:1;pointer-events:all}
   .node .anchor:hover{fill:var(--accent);r:6.5}
   .handle{fill:#fff;stroke:var(--accent);stroke-width:2;pointer-events:all}
@@ -103,97 +139,80 @@
   .edge-hit{stroke:transparent;stroke-width:18;fill:none;cursor:pointer}
   .edge-line{pointer-events:none}
 
-  .text-editor{position:absolute;display:none;z-index:20;background:#fff;
+  /* Text editor overlay */
+  .text-editor{
+    position:absolute;display:none;z-index:20;background:#fff;
     border:2px solid var(--accent);border-radius:6px;padding:6px;
     font-size:14px;line-height:1.35;outline:none;overflow:auto;text-align:center;
     color:#1e293b;box-shadow:0 10px 30px rgba(16,24,40,.18);
-    white-space:pre-wrap;word-break:break-word;font-family:inherit;}
+    white-space:pre-wrap;word-break:break-word;font-family:inherit;
+  }
 
-  .inspector{width:242px;flex:0 0 242px;background:var(--panel);border-left:1px solid var(--border);
-    padding:12px;overflow-y:auto;}
+  /* Inspector */
+  .inspector{
+    width:242px;flex:0 0 242px;background:var(--panel);border-left:1px solid var(--border);
+    padding:12px;overflow-y:auto;
+  }
   .empty-state{font-size:12px;color:var(--muted);line-height:1.55;padding:10px 2px}
   .field{margin-bottom:12px}
-  .field label{display:block;font-size:10.5px;font-weight:800;color:var(--muted);
-    text-transform:uppercase;letter-spacing:.55px;margin-bottom:5px;}
-  .field input[type=text],.field input[type=number]{width:100%;height:33px;border:1px solid var(--border);
-    border-radius:9px;padding:0 10px;font-size:13px;color:var(--text);outline:none;background:#fff;font-family:inherit;}
-  .field input[type=text]:focus,.field input[type=number]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.13)}
-  .field input[type=color]{width:100%;height:33px;border:1px solid var(--border);border-radius:9px;
-    padding:2px 3px;background:#fff;cursor:pointer;}
+  .field label{
+    display:block;font-size:10.5px;font-weight:800;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.55px;margin-bottom:5px;
+  }
+  .field input[type=text],.field input[type=number]{
+    width:100%;height:33px;border:1px solid var(--border);border-radius:9px;padding:0 10px;
+    font-size:13px;color:var(--text);outline:none;background:#fff;font-family:inherit;
+  }
+  .field input[type=text]:focus,.field input[type=number]:focus{
+    border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.13);
+  }
+  .field input[type=color]{
+    width:100%;height:33px;border:1px solid var(--border);border-radius:9px;
+    padding:2px 3px;background:#fff;cursor:pointer;
+  }
   .field.check label{display:flex;align-items:center;gap:8px;text-transform:none;font-size:12.5px;letter-spacing:0;color:var(--text);font-weight:600}
   .field.check input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
   .actions{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
   .actions .btn{flex:1;justify-content:center;padding:0 8px}
 
-  .footer{height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:center;
-    background:var(--panel);border-top:1px solid var(--border);font-size:12px;color:var(--muted);letter-spacing:.2px;}
+  /* Footer */
+  .footer{
+    height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:center;
+    background:var(--panel);border-top:1px solid var(--border);
+    font-size:12px;color:var(--muted);letter-spacing:.2px;
+  }
   .footer strong{color:var(--accent);font-weight:800;letter-spacing:.4px}
-  .footer .save-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#16a34a;
-    margin-right:6px;vertical-align:middle;transition:opacity .3s;opacity:.35;}
+  .footer .save-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#16a34a;margin-right:6px;vertical-align:middle;transition:opacity .3s;opacity:.35}
   .footer .save-dot.active{opacity:1}
 
-  .toast{position:fixed;left:50%;bottom:56px;transform:translateX(-50%) translateY(16px);
+  /* Toast */
+  .toast{
+    position:fixed;left:50%;bottom:56px;transform:translateX(-50%) translateY(16px);
     background:#0f172a;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;
     font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:200;
-    box-shadow:0 10px 30px rgba(16,24,40,.25);}
+    box-shadow:0 10px 30px rgba(16,24,40,.25);
+  }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  .drawer-backdrop{display:none;position:fixed;left:0;right:0;top:58px;bottom:34px;
-    background:rgba(15,23,42,.35);z-index:55;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  /* Drawer backdrop (mobile only) */
+  .drawer-backdrop{
+    display:none;position:fixed;left:0;right:0;top:58px;bottom:34px;
+    background:rgba(15,23,42,.35);z-index:55;
+    opacity:0;pointer-events:none;transition:opacity .25s ease;
+  }
   .drawer-backdrop.open{opacity:1;pointer-events:auto}
 
+  /* Drawer close button */
   .drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-  .drawer-close{display:none;width:30px;height:30px;border-radius:8px;border:none;background:#f1f5f9;
-    color:#475569;font-size:16px;cursor:pointer;line-height:1;}
+  .drawer-close{display:none;width:30px;height:30px;border-radius:8px;border:none;background:#f1f5f9;color:#475569;font-size:16px;cursor:pointer;line-height:1}
   .drawer-close:hover{background:#e2e8f0}
-
-  /* ============ VALIDATOR MODAL ============ */
-  .validator-modal{position:fixed;inset:0;background:rgba(15,23,42,.55);
-    z-index:150;display:none;align-items:center;justify-content:center;padding:16px;
-    backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);}
-  .validator-modal.open{display:flex}
-  .validator-panel{width:100%;max-width:520px;max-height:88vh;background:#fff;border-radius:16px;
-    box-shadow:0 20px 60px rgba(15,23,42,.35);display:flex;flex-direction:column;overflow:hidden;
-    animation:popIn .22s cubic-bezier(.4,0,.2,1);}
-  @keyframes popIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
-  .validator-head{display:flex;justify-content:space-between;align-items:flex-start;
-    padding:18px 20px 14px;border-bottom:1px solid var(--border);}
-  .validator-title{font-size:16px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
-  .validator-sub{font-size:12px;color:var(--muted);margin-top:4px}
-  .validator-body{padding:18px 20px;overflow-y:auto;flex:1}
-
-  .score-card{display:flex;align-items:center;gap:16px;padding:16px 18px;
-    background:linear-gradient(135deg,#eef2ff,#f0f9ff);
-    border:1px solid var(--border);border-radius:12px;margin-top:16px;margin-bottom:14px;}
-  .score-num{font-size:38px;font-weight:900;color:var(--accent);line-height:1;
-    min-width:70px;text-align:center;font-variant-numeric:tabular-nums;}
-  .score-num.good{color:#16a34a}
-  .score-num.warn{color:#d97706}
-  .score-num.bad{color:#dc2626}
-  .score-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-  .score-breakdown{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4}
-
-  .issue-list{display:flex;flex-direction:column;gap:8px}
-  .issue-item{display:flex;gap:10px;padding:11px 13px;border-radius:10px;
-    font-size:12.5px;line-height:1.5;cursor:pointer;transition:.15s;border:1px solid transparent;}
-  .issue-item:hover{transform:translateX(2px);border-color:currentColor}
-  .issue-icon{flex:0 0 auto;width:20px;height:20px;border-radius:50%;display:inline-flex;
-    align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;margin-top:1px;}
-  .issue-error{background:#fef2f2;color:#991b1b}
-  .issue-error .issue-icon{background:#dc2626}
-  .issue-warning{background:#fffbeb;color:#92400e}
-  .issue-warning .issue-icon{background:#d97706}
-  .issue-tip{background:#eff6ff;color:#1e40af}
-  .issue-tip .issue-icon{background:#2563eb}
-  .issue-success{background:#f0fdf4;color:#166534}
-  .issue-success .issue-icon{background:#16a34a}
-  .issue-body{flex:1}
 
   ::-webkit-scrollbar{width:9px;height:9px}
   ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:6px;border:2px solid #fff}
   ::-webkit-scrollbar-thumb:hover{background:#94a3b8}
   ::-webkit-scrollbar-track{background:transparent}
 
+  /* ============ MOBILE / TABLET ============ */
   @media (max-width:900px){
     .topbar{padding:0 8px;gap:8px;height:54px;flex:0 0 54px}
     .brand{min-width:0;flex:0 0 auto}
@@ -201,40 +220,62 @@
     .brand-name{font-size:14px}
     .logo{width:28px;height:28px;border-radius:8px}
     .logo svg{width:16px;height:16px}
+
     .toolbar{gap:4px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:0 2px}
     .toolbar::-webkit-scrollbar{display:none}
     .sep{display:none}
     .btn span{display:none}
     .btn{padding:0 9px;height:32px}
     .icon-btn{width:32px;height:32px}
+
     .mobile-tools{display:flex}
+
     .zoombar .switch{display:none}
-    .palette{position:fixed;left:0;top:54px;bottom:34px;width:290px;max-width:86vw;
-      z-index:60;background:var(--panel);transform:translateX(-105%);
-      transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:8px 0 32px rgba(15,23,42,.18);
-      border-right:1px solid var(--border);border-radius:0 16px 16px 0;padding:14px;}
+
+    /* Palette → left drawer */
+    .palette{
+      position:fixed;left:0;top:54px;bottom:34px;width:290px;max-width:86vw;
+      z-index:60;background:var(--panel);
+      transform:translateX(-105%);
+      transition:transform .28s cubic-bezier(.4,0,.2,1);
+      box-shadow:8px 0 32px rgba(15,23,42,.18);
+      border-right:1px solid var(--border);
+      border-radius:0 16px 16px 0;
+      padding:14px;
+    }
     .palette.open{transform:translateX(0)}
-    .inspector{position:fixed;right:0;top:54px;bottom:34px;width:300px;max-width:86vw;
-      z-index:60;background:var(--panel);transform:translateX(105%);
-      transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 32px rgba(15,23,42,.18);
-      border-left:1px solid var(--border);border-radius:16px 0 0 16px;padding:14px;}
+
+    /* Inspector → right drawer */
+    .inspector{
+      position:fixed;right:0;top:54px;bottom:34px;width:300px;max-width:86vw;
+      z-index:60;background:var(--panel);
+      transform:translateX(105%);
+      transition:transform .28s cubic-bezier(.4,0,.2,1);
+      box-shadow:-8px 0 32px rgba(15,23,42,.18);
+      border-left:1px solid var(--border);
+      border-radius:16px 0 0 16px;
+      padding:14px;
+    }
     .inspector.open{transform:translateX(0)}
+
     .shape-grid{grid-template-columns:1fr 1fr}
     .drawer-backdrop{display:block;top:54px;bottom:34px}
     .drawer-close{display:inline-flex;align-items:center;justify-content:center}
     .footer{font-size:10px}
-    .validator-modal{padding:8px;align-items:flex-end}
-    .validator-panel{max-height:92vh;border-radius:16px 16px 0 0}
   }
+
   @media (max-width:400px){
     .brand-name{display:none}
     .palette,.inspector{max-width:92vw}
   }
 </style>
+  <script src="cordova.js"></script>
 </head>
 <body>
 
 <div class="app">
+
+  <!-- ================= TOP BAR ================= -->
   <header class="topbar">
     <div class="brand">
       <div class="logo">
@@ -246,6 +287,7 @@
       </div>
     </div>
 
+    <!-- Mobile-only drawer toggles -->
     <div class="mobile-tools">
       <button class="icon-btn" id="btnTogglePalette" title="Shapes">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
@@ -256,20 +298,16 @@
     </div>
 
     <div class="toolbar">
+      <!-- Export PNG is now the primary/first action -->
       <div class="group">
         <button class="btn primary" id="btnExport" title="Export as PNG image">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
           <span>Export PNG</span>
         </button>
       </div>
+
       <div class="sep"></div>
-      <div class="group">
-        <button class="btn success" id="btnCheck" title="Check flowchart (Ctrl+K)">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Check ✓</span>
-        </button>
-      </div>
-      <div class="sep"></div>
+
       <div class="group">
         <button class="icon-btn" id="btnUndo" title="Undo (Ctrl+Z)">
           <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
@@ -278,7 +316,9 @@
           <svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/></svg>
         </button>
       </div>
+
       <div class="sep"></div>
+
       <div class="group">
         <button class="icon-btn" id="btnDelete" title="Delete (Del)">
           <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
@@ -287,15 +327,22 @@
     </div>
 
     <div class="zoombar">
-      <button class="icon-btn" id="btnZoomOut" title="Zoom Out"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+      <button class="icon-btn" id="btnZoomOut" title="Zoom Out">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+      </button>
       <span id="zoomLabel">100%</span>
-      <button class="icon-btn" id="btnZoomIn" title="Zoom In"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
+      <button class="icon-btn" id="btnZoomIn" title="Zoom In">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      </button>
       <button class="btn ghost" id="btnFit" title="Fit to screen">Fit</button>
       <label class="switch"><input type="checkbox" id="snapToggle" checked><span>Snap</span></label>
     </div>
   </header>
 
+  <!-- ================= WORKSPACE ================= -->
   <div class="workspace">
+
+    <!-- Shape palette -->
     <aside class="palette" id="palette">
       <div class="drawer-head">
         <div class="panel-title" style="margin:0">Shapes</div>
@@ -305,10 +352,12 @@
       <div class="hint">Drag a shape onto the canvas, or click it to add at the centre. Double‑click any shape to edit its text.</div>
     </aside>
 
+    <!-- Canvas -->
     <main class="canvas-wrap" id="canvasWrap">
       <svg id="svg">
         <defs>
-          <marker id="arrow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+          <marker id="arrow" viewBox="0 0 12 12" refX="11" refY="6"
+                  markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
             <path d="M 0 1 L 11 6 L 0 11 z" fill="context-stroke"></path>
           </marker>
         </defs>
@@ -320,6 +369,7 @@
       <div id="textEditor" class="text-editor" contenteditable="true" spellcheck="false"></div>
     </main>
 
+    <!-- Inspector -->
     <aside class="inspector" id="inspector">
       <div class="drawer-head">
         <div class="panel-title" style="margin:0">Properties</div>
@@ -327,13 +377,33 @@
       </div>
       <div id="inspEmpty" class="empty-state">Select a shape or connector to edit its properties.</div>
       <div id="inspFields" style="display:none">
-        <div class="field" id="fText"><label>Label</label><input type="text" id="propText" placeholder="Enter text…"></div>
-        <div class="field" id="fFill"><label>Fill color</label><input type="color" id="propFill"></div>
-        <div class="field" id="fStroke"><label id="lblStroke">Border color</label><input type="color" id="propStroke"></div>
-        <div class="field" id="fTextColor"><label>Text color</label><input type="color" id="propTextColor"></div>
-        <div class="field" id="fFont"><label>Font size</label><input type="number" id="propFont" min="8" max="48" step="1"></div>
-        <div class="field" id="fWidth"><label id="lblWidth">Border width</label><input type="number" id="propWidth" min="0" max="10" step="1"></div>
-        <div class="field check" id="fDashed"><label><input type="checkbox" id="propDashed"> Dashed line</label></div>
+        <div class="field" id="fText">
+          <label>Label</label>
+          <input type="text" id="propText" placeholder="Enter text…">
+        </div>
+        <div class="field" id="fFill">
+          <label>Fill color</label>
+          <input type="color" id="propFill">
+        </div>
+        <div class="field" id="fStroke">
+          <label id="lblStroke">Border color</label>
+          <input type="color" id="propStroke">
+        </div>
+        <div class="field" id="fTextColor">
+          <label>Text color</label>
+          <input type="color" id="propTextColor">
+        </div>
+        <div class="field" id="fFont">
+          <label>Font size</label>
+          <input type="number" id="propFont" min="8" max="48" step="1">
+        </div>
+        <div class="field" id="fWidth">
+          <label id="lblWidth">Border width</label>
+          <input type="number" id="propWidth" min="0" max="10" step="1">
+        </div>
+        <div class="field check" id="fDashed">
+          <label><input type="checkbox" id="propDashed"> Dashed line</label>
+        </div>
         <div class="actions">
           <button class="btn" id="btnDup">Duplicate</button>
           <button class="btn danger" id="btnDel2">Delete</button>
@@ -342,45 +412,15 @@
     </aside>
   </div>
 
+  <!-- ================= FOOTER ================= -->
   <footer class="footer">
     <span class="save-dot" id="saveDot"></span>
     All rights reserved by <strong>TAHA MUJTABA</strong>
   </footer>
 </div>
 
+<!-- Mobile drawer backdrop -->
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
-
-<div class="validator-modal" id="validatorModal">
-  <div class="validator-panel">
-    <div class="validator-head">
-      <div>
-        <div class="validator-title">🔍 Flowchart Checker</div>
-        <div class="validator-sub">Enter your topic to see if the diagram is correct</div>
-      </div>
-      <button class="icon-btn" id="btnCloseValidator" title="Close">✕</button>
-    </div>
-    <div class="validator-body">
-      <div class="field">
-        <label>What is this flowchart about?</label>
-        <input type="text" id="topicInput" placeholder="e.g. How to make tea, User login, Order checkout…">
-      </div>
-      <button class="btn primary" id="btnRunCheck" style="width:100%;justify-content:center;height:40px">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        <span>Check Flowchart</span>
-      </button>
-      <div id="validatorResults" style="display:none">
-        <div class="score-card">
-          <div class="score-num" id="scoreNum">0</div>
-          <div style="flex:1">
-            <div class="score-label">Quality Score</div>
-            <div class="score-breakdown" id="scoreBreakdown"></div>
-          </div>
-        </div>
-        <div class="issue-list" id="issuesList"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div id="toast" class="toast"></div>
 
@@ -388,163 +428,246 @@
 (function () {
   'use strict';
 
+  /* =====================================================================
+     CONSTANTS & STATE
+     ===================================================================== */
   const NS = 'http://www.w3.org/2000/svg';
-  const GRID = 10, MIN_W = 40, MIN_H = 30;
+  const GRID = 10;
+  const MIN_W = 40;
+  const MIN_H = 30;
 
   const SHAPES = [
-    { type:'rect', name:'Process' },
-    { type:'round', name:'Rounded' },
-    { type:'stadium', name:'Start / End' },
-    { type:'diamond', name:'Decision' },
-    { type:'ellipse', name:'Circle' },
+    { type:'rect',          name:'Process'       },
+    { type:'round',         name:'Rounded'       },
+    { type:'stadium',       name:'Start / End'   },
+    { type:'diamond',       name:'Decision'      },
+    { type:'ellipse',       name:'Circle'        },
     { type:'parallelogram', name:'Parallelogram' },
-    { type:'hexagon', name:'Preparation' },
-    { type:'cylinder', name:'Database' },
-    { type:'document', name:'Document' },
-    { type:'note', name:'Note' },
-    { type:'text', name:'Text' }
+    { type:'hexagon',       name:'Preparation'   },
+    { type:'cylinder',      name:'Database'      },
+    { type:'document',      name:'Document'      },
+    { type:'note',          name:'Note'          },
+    { type:'text',          name:'Text'          }
   ];
+
   const SIZES = {
     rect:[160,80], round:[160,80], stadium:[150,60], diamond:[140,100],
     ellipse:[130,100], parallelogram:[160,80], hexagon:[160,80],
     cylinder:[120,110], document:[150,90], note:[140,90], text:[140,44]
   };
+
   const TEXTS = {
     rect:'Process', round:'Step', stadium:'Start', diamond:'Decision?',
     ellipse:'', parallelogram:'Data', hexagon:'Prepare', cylinder:'Database',
     document:'Document', note:'Note', text:'Text'
   };
 
-  const state = { nodes:[], edges:[], sel:null, zoom:1, pan:{x:60,y:60}, snap:true };
-  let history = [], hIndex = -1, editingId = null, rafPending = false;
+  const state = {
+    nodes: [],
+    edges: [],
+    sel: null,
+    zoom: 1,
+    pan: { x: 60, y: 60 },
+    snap: true
+  };
 
-  const svg = document.getElementById('svg');
-  const viewport = document.getElementById('viewport');
+  let history = [];
+  let hIndex = -1;
+  let editingId = null;
+  let rafPending = false;
+
+  /* =====================================================================
+     DOM REFS
+     ===================================================================== */
+  const svg        = document.getElementById('svg');
+  const viewport   = document.getElementById('viewport');
   const edgesLayer = document.getElementById('edgesLayer');
   const nodesLayer = document.getElementById('nodesLayer');
   const canvasWrap = document.getElementById('canvasWrap');
   const textEditor = document.getElementById('textEditor');
-  const shapeGrid = document.getElementById('shapeGrid');
-  const toastEl = document.getElementById('toast');
-  const zoomLabel = document.getElementById('zoomLabel');
-  const saveDot = document.getElementById('saveDot');
-  const paletteEl = document.getElementById('palette');
-  const inspectorEl = document.getElementById('inspector');
-  const backdrop = document.getElementById('drawerBackdrop');
+  const shapeGrid  = document.getElementById('shapeGrid');
+  const toastEl    = document.getElementById('toast');
+  const zoomLabel  = document.getElementById('zoomLabel');
+  const saveDot    = document.getElementById('saveDot');
+
+  const paletteEl  = document.getElementById('palette');
+  const inspectorEl= document.getElementById('inspector');
+  const backdrop   = document.getElementById('drawerBackdrop');
 
   const isMobile = () => window.innerWidth <= 900;
 
-  function closeDrawers(){
+  /* =====================================================================
+     DRAWER LOGIC (mobile)
+     ===================================================================== */
+  function closeDrawers() {
     paletteEl.classList.remove('open');
     inspectorEl.classList.remove('open');
     backdrop.classList.remove('open');
     document.getElementById('btnTogglePalette').classList.remove('active');
     document.getElementById('btnToggleInspector').classList.remove('active');
   }
-  function openDrawer(which){
+
+  function openDrawer(which) {
     closeDrawers();
-    if (which==='palette'){ paletteEl.classList.add('open'); document.getElementById('btnTogglePalette').classList.add('active'); }
-    else if (which==='inspector'){ inspectorEl.classList.add('open'); document.getElementById('btnToggleInspector').classList.add('active'); }
+    if (which === 'palette') {
+      paletteEl.classList.add('open');
+      document.getElementById('btnTogglePalette').classList.add('active');
+    } else if (which === 'inspector') {
+      inspectorEl.classList.add('open');
+      document.getElementById('btnToggleInspector').classList.add('active');
+    }
     backdrop.classList.add('open');
   }
-  document.getElementById('btnTogglePalette').addEventListener('click', ()=> paletteEl.classList.contains('open') ? closeDrawers() : openDrawer('palette'));
-  document.getElementById('btnToggleInspector').addEventListener('click', ()=> inspectorEl.classList.contains('open') ? closeDrawers() : openDrawer('inspector'));
+
+  document.getElementById('btnTogglePalette').addEventListener('click', () => {
+    paletteEl.classList.contains('open') ? closeDrawers() : openDrawer('palette');
+  });
+  document.getElementById('btnToggleInspector').addEventListener('click', () => {
+    inspectorEl.classList.contains('open') ? closeDrawers() : openDrawer('inspector');
+  });
   document.getElementById('btnClosePalette').addEventListener('click', closeDrawers);
   document.getElementById('btnCloseInspector').addEventListener('click', closeDrawers);
   backdrop.addEventListener('click', closeDrawers);
-  window.addEventListener('resize', ()=>{ if (!isMobile()) closeDrawers(); });
 
+  window.addEventListener('resize', () => { if (!isMobile()) closeDrawers(); });
+
+  /* =====================================================================
+     UTILITIES
+     ===================================================================== */
   const uid = () => 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-  const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const getNode = id => state.nodes.find(n => n.id === id);
 
-  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
 
   const _ctx = document.createElement('canvas').getContext('2d');
-  function measure(text, font){ _ctx.font = font; return _ctx.measureText(text).width; }
+  function measure(text, font) { _ctx.font = font; return _ctx.measureText(text).width; }
 
-  function toast(msg){
+  function toast(msg) {
     toastEl.textContent = msg;
     toastEl.classList.add('show');
     clearTimeout(toast._t);
-    toast._t = setTimeout(()=> toastEl.classList.remove('show'), 2200);
-  }
-  function flashSaveDot(){
-    saveDot.classList.add('active');
-    clearTimeout(flashSaveDot._t);
-    flashSaveDot._t = setTimeout(()=> saveDot.classList.remove('active'), 1200);
+    toast._t = setTimeout(() => toastEl.classList.remove('show'), 2200);
   }
 
-  function shapePath(type, w, h){
+  function flashSaveDot() {
+    saveDot.classList.add('active');
+    clearTimeout(flashSaveDot._t);
+    flashSaveDot._t = setTimeout(() => saveDot.classList.remove('active'), 1200);
+  }
+
+  /* =====================================================================
+     SHAPE GEOMETRY
+     ===================================================================== */
+  function shapePath(type, w, h) {
     const m = Math.min(w, h);
-    switch (type){
-      case 'rect': return `<rect x="0" y="0" width="${w}" height="${h}"/>`;
-      case 'round': return `<rect x="0" y="0" width="${w}" height="${h}" rx="${Math.min(14, m/4)}"/>`;
-      case 'stadium': return `<rect x="0" y="0" width="${w}" height="${h}" rx="${h/2}"/>`;
-      case 'ellipse': return `<ellipse cx="${w/2}" cy="${h/2}" rx="${w/2}" ry="${h/2}"/>`;
-      case 'diamond': return `<path d="M ${w/2} 0 L ${w} ${h/2} L ${w/2} ${h} L 0 ${h/2} Z"/>`;
-      case 'parallelogram': { const o=w*0.2; return `<path d="M ${o} 0 L ${w} 0 L ${w-o} ${h} L 0 ${h} Z"/>`; }
-      case 'hexagon': { const o=w*0.2; return `<path d="M ${o} 0 L ${w-o} 0 L ${w} ${h/2} L ${w-o} ${h} L ${o} ${h} L 0 ${h/2} Z"/>`; }
-      case 'cylinder': { const ry=Math.min(h*0.18,14);
-        return `<path d="M 0 ${ry} A ${w/2} ${ry} 0 0 1 ${w} ${ry} L ${w} ${h-ry} A ${w/2} ${ry} 0 0 1 0 ${h-ry} Z"/><ellipse cx="${w/2}" cy="${ry}" rx="${w/2}" ry="${ry}" fill="none"/>`; }
-      case 'document': return `<path d="M 0 0 L ${w} 0 L ${w} ${h*0.82} C ${w*0.75} ${h*1.03} ${w*0.25} ${h*0.61} 0 ${h*0.82} Z"/>`;
-      case 'note': { const f=Math.min(w,h)*0.26;
-        return `<path d="M 0 0 L ${w-f} 0 L ${w} ${f} L ${w} ${h} L 0 ${h} Z"/><path d="M ${w-f} 0 L ${w-f} ${f} L ${w} ${f}" fill="none"/>`; }
-      case 'text': return `<rect x="0" y="0" width="${w}" height="${h}" fill="transparent" stroke="none"/>`;
-      default: return `<rect x="0" y="0" width="${w}" height="${h}"/>`;
+    switch (type) {
+      case 'rect':
+        return `<rect x="0" y="0" width="${w}" height="${h}"/>`;
+      case 'round':
+        return `<rect x="0" y="0" width="${w}" height="${h}" rx="${Math.min(14, m / 4)}"/>`;
+      case 'stadium':
+        return `<rect x="0" y="0" width="${w}" height="${h}" rx="${h / 2}"/>`;
+      case 'ellipse':
+        return `<ellipse cx="${w / 2}" cy="${h / 2}" rx="${w / 2}" ry="${h / 2}"/>`;
+      case 'diamond':
+        return `<path d="M ${w / 2} 0 L ${w} ${h / 2} L ${w / 2} ${h} L 0 ${h / 2} Z"/>`;
+      case 'parallelogram': {
+        const o = w * 0.2;
+        return `<path d="M ${o} 0 L ${w} 0 L ${w - o} ${h} L 0 ${h} Z"/>`;
+      }
+      case 'hexagon': {
+        const o = w * 0.2;
+        return `<path d="M ${o} 0 L ${w - o} 0 L ${w} ${h / 2} L ${w - o} ${h} L ${o} ${h} L 0 ${h / 2} Z"/>`;
+      }
+      case 'cylinder': {
+        const ry = Math.min(h * 0.18, 14);
+        return `<path d="M 0 ${ry} A ${w / 2} ${ry} 0 0 1 ${w} ${ry} L ${w} ${h - ry} A ${w / 2} ${ry} 0 0 1 0 ${h - ry} Z"/>` +
+               `<ellipse cx="${w / 2}" cy="${ry}" rx="${w / 2}" ry="${ry}" fill="none"/>`;
+      }
+      case 'document':
+        return `<path d="M 0 0 L ${w} 0 L ${w} ${h * 0.82} C ${w * 0.75} ${h * 1.03} ${w * 0.25} ${h * 0.61} 0 ${h * 0.82} Z"/>`;
+      case 'note': {
+        const f = Math.min(w, h) * 0.26;
+        return `<path d="M 0 0 L ${w - f} 0 L ${w} ${f} L ${w} ${h} L 0 ${h} Z"/>` +
+               `<path d="M ${w - f} 0 L ${w - f} ${f} L ${w} ${f}" fill="none"/>`;
+      }
+      case 'text':
+        return `<rect x="0" y="0" width="${w}" height="${h}" fill="transparent" stroke="none"/>`;
+      default:
+        return `<rect x="0" y="0" width="${w}" height="${h}"/>`;
     }
   }
-  function anchorPoint(n, side){
-    switch (side){
-      case 'top': return { x:n.x+n.w/2, y:n.y };
-      case 'right': return { x:n.x+n.w, y:n.y+n.h/2 };
-      case 'bottom': return { x:n.x+n.w/2, y:n.y+n.h };
-      default: return { x:n.x, y:n.y+n.h/2 };
+
+  function anchorPoint(n, side) {
+    switch (side) {
+      case 'top':    return { x: n.x + n.w / 2, y: n.y };
+      case 'right':  return { x: n.x + n.w,     y: n.y + n.h / 2 };
+      case 'bottom': return { x: n.x + n.w / 2, y: n.y + n.h };
+      default:       return { x: n.x,           y: n.y + n.h / 2 };
     }
   }
-  function offsetPt(p, side, d){
-    switch (side){
-      case 'top': return { x:p.x, y:p.y-d };
-      case 'bottom': return { x:p.x, y:p.y+d };
-      case 'left': return { x:p.x-d, y:p.y };
-      default: return { x:p.x+d, y:p.y };
+
+  function offsetPt(p, side, d) {
+    switch (side) {
+      case 'top':    return { x: p.x,     y: p.y - d };
+      case 'bottom': return { x: p.x,     y: p.y + d };
+      case 'left':   return { x: p.x - d, y: p.y };
+      default:       return { x: p.x + d, y: p.y };
     }
   }
-  function autoSides(a, b){
-    const ac={x:a.x+a.w/2,y:a.y+a.h/2}, bc={x:b.x+b.w/2,y:b.y+b.h/2};
-    const dx=bc.x-ac.x, dy=bc.y-ac.y;
-    if (Math.abs(dx) > Math.abs(dy)) return dx>0 ? ['right','left'] : ['left','right'];
-    return dy>0 ? ['bottom','top'] : ['top','bottom'];
+
+  function autoSides(a, b) {
+    const ac = { x: a.x + a.w / 2, y: a.y + a.h / 2 };
+    const bc = { x: b.x + b.w / 2, y: b.y + b.h / 2 };
+    const dx = bc.x - ac.x, dy = bc.y - ac.y;
+    if (Math.abs(dx) > Math.abs(dy)) return dx > 0 ? ['right', 'left'] : ['left', 'right'];
+    return dy > 0 ? ['bottom', 'top'] : ['top', 'bottom'];
   }
-  function edgeGeometry(e){
-    const a=getNode(e.from), b=getNode(e.to);
-    if (!a||!b) return null;
-    const [fs,ts] = autoSides(a,b);
-    const p1 = anchorPoint(a, fs), p2 = anchorPoint(b, ts);
-    const dist = Math.hypot(p2.x-p1.x, p2.y-p1.y);
-    const d = clamp(dist*0.42, 40, 170);
-    return { p1, c1:offsetPt(p1, fs, d), c2:offsetPt(p2, ts, d), p2 };
+
+  function edgeGeometry(e) {
+    const a = getNode(e.from), b = getNode(e.to);
+    if (!a || !b) return null;
+    const [fs, ts] = autoSides(a, b);
+    const p1 = anchorPoint(a, fs);
+    const p2 = anchorPoint(b, ts);
+    const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    const d = clamp(dist * 0.42, 40, 170);
+    return { p1, c1: offsetPt(p1, fs, d), c2: offsetPt(p2, ts, d), p2 };
   }
-  function edgePathD(e){
+
+  function edgePathD(e) {
     const g = edgeGeometry(e);
     if (!g) return '';
     return `M ${g.p1.x} ${g.p1.y} C ${g.c1.x} ${g.c1.y} ${g.c2.x} ${g.c2.y} ${g.p2.x} ${g.p2.y}`;
   }
-  function edgeMid(e){
+
+  function edgeMid(e) {
     const g = edgeGeometry(e);
-    if (!g) return { x:0, y:0 };
-    return { x:(g.p1.x+3*g.c1.x+3*g.c2.x+g.p2.x)/8, y:(g.p1.y+3*g.c1.y+3*g.c2.y+g.p2.y)/8 };
+    if (!g) return { x: 0, y: 0 };
+    return {
+      x: (g.p1.x + 3 * g.c1.x + 3 * g.c2.x + g.p2.x) / 8,
+      y: (g.p1.y + 3 * g.c1.y + 3 * g.c2.y + g.p2.y) / 8
+    };
   }
-  function wrapText(text, maxWidth, fontSize){
+
+  /* =====================================================================
+     TEXT WRAPPING
+     ===================================================================== */
+  function wrapText(text, maxWidth, fontSize) {
     const font = `500 ${fontSize}px Inter, "Segoe UI", Arial, sans-serif`;
     const out = [];
     String(text == null ? '' : text).split('\n').forEach(para => {
-      if (!para){ out.push(''); return; }
+      if (!para) { out.push(''); return; }
       const words = para.split(/\s+/);
       let line = '';
-      for (const w of words){
+      for (const w of words) {
         const test = line ? line + ' ' + w : w;
-        if (measure(test, font) > maxWidth && line){ out.push(line); line = w; }
+        if (measure(test, font) > maxWidth && line) { out.push(line); line = w; }
         else line = test;
       }
       if (line) out.push(line);
@@ -552,136 +675,222 @@
     return out;
   }
 
-  function nodeMarkup(n, interactive){
+  /* =====================================================================
+     MARKUP BUILDERS
+     ===================================================================== */
+  function nodeMarkup(n, interactive) {
     const isSel = interactive && state.sel && state.sel.type === 'node' && state.sel.id === n.id;
     const isText = n.type === 'text';
-    const fill = isText ? 'none' : n.fill;
+    const fill   = isText ? 'none' : n.fill;
     const stroke = isText ? 'none' : n.stroke;
-    let s = `<g class="node${isSel?' selected':''}" data-id="${n.id}" transform="translate(${n.x},${n.y})">`;
-    s += `<g fill="${fill}" stroke="${stroke}" stroke-width="${n.strokeWidth}" stroke-linejoin="round">${shapePath(n.type, n.w, n.h)}</g>`;
-    if (isSel) s += `<rect x="-3" y="-3" width="${n.w+6}" height="${n.h+6}" rx="7" fill="none" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="5 4" pointer-events="none"/>`;
+
+    let s = `<g class="node${isSel ? ' selected' : ''}" data-id="${n.id}" transform="translate(${n.x},${n.y})">`;
+
+    s += `<g fill="${fill}" stroke="${stroke}" stroke-width="${n.strokeWidth}" stroke-linejoin="round">`
+       + shapePath(n.type, n.w, n.h) + `</g>`;
+
+    if (isSel) {
+      s += `<rect x="-3" y="-3" width="${n.w + 6}" height="${n.h + 6}" rx="7" fill="none"
+              stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="5 4" pointer-events="none"/>`;
+    }
+
     s += textMarkup(n);
-    if (interactive){
-      for (const side of ['top','right','bottom','left']){
-        const p = anchorPoint({x:0,y:0,w:n.w,h:n.h}, side);
+
+    if (interactive) {
+      for (const side of ['top', 'right', 'bottom', 'left']) {
+        const p = anchorPoint({ x: 0, y: 0, w: n.w, h: n.h }, side);
         s += `<circle class="anchor" data-side="${side}" cx="${p.x}" cy="${p.y}" r="5"/>`;
       }
-      if (isSel){
-        const pts = { nw:{x:0,y:0}, ne:{x:n.w,y:0}, se:{x:n.w,y:n.h}, sw:{x:0,y:n.h} };
-        for (const h in pts) s += `<rect class="handle" data-handle="${h}" x="${pts[h].x-4}" y="${pts[h].y-4}" width="8" height="8" rx="2"/>`;
+      if (isSel) {
+        const pts = {
+          nw: { x: 0, y: 0 }, ne: { x: n.w, y: 0 },
+          se: { x: n.w, y: n.h }, sw: { x: 0, y: n.h }
+        };
+        for (const h in pts) {
+          s += `<rect class="handle" data-handle="${h}" x="${pts[h].x - 4}" y="${pts[h].y - 4}"
+                  width="8" height="8" rx="2"/>`;
+        }
       }
     }
+
     s += `</g>`;
     return s;
   }
-  function textMarkup(n){
+
+  function textMarkup(n) {
     if (!n.text) return '';
     const maxW = Math.max(20, n.w - 16);
     const lines = wrapText(n.text, maxW, n.fontSize);
     if (!lines.length) return '';
     const lh = n.fontSize * 1.35;
-    const startY = n.h/2 - (lines.length-1)*lh/2;
-    const spans = lines.map((l,i)=> `<tspan x="${n.w/2}" y="${startY + i*lh}">${esc(l)}</tspan>`).join('');
-    return `<text class="node-text" text-anchor="middle" dominant-baseline="middle" font-family='Inter, "Segoe UI", Arial, sans-serif' font-size="${n.fontSize}" font-weight="500" fill="${n.textColor}">${spans}</text>`;
+    const startY = n.h / 2 - (lines.length - 1) * lh / 2;
+    const spans = lines.map((l, i) =>
+      `<tspan x="${n.w / 2}" y="${startY + i * lh}">${esc(l)}</tspan>`).join('');
+    return `<text class="node-text" text-anchor="middle" dominant-baseline="middle"
+              font-family='Inter, "Segoe UI", Arial, sans-serif'
+              font-size="${n.fontSize}" font-weight="500" fill="${n.textColor}">${spans}</text>`;
   }
-  function edgeMarkup(e){
+
+  function edgeMarkup(e) {
     const d = edgePathD(e);
     if (!d) return '';
     const isSel = state.sel && state.sel.type === 'edge' && state.sel.id === e.id;
     let s = `<g class="edge" data-id="${e.id}">`;
     s += `<path class="edge-hit" d="${d}"/>`;
-    if (isSel) s += `<path d="${d}" fill="none" stroke="#4f46e5" stroke-opacity=".25" stroke-width="${e.width+8}" pointer-events="none"/>`;
-    s += `<path class="edge-line" d="${d}" fill="none" stroke="${e.color}" stroke-width="${e.width}" marker-end="url(#arrow)" ${e.dashed?'stroke-dasharray="7 5"':''}/>`;
+    if (isSel) {
+      s += `<path d="${d}" fill="none" stroke="#4f46e5" stroke-opacity=".25"
+              stroke-width="${e.width + 8}" pointer-events="none"/>`;
+    }
+    s += `<path class="edge-line" d="${d}" fill="none" stroke="${e.color}"
+            stroke-width="${e.width}" marker-end="url(#arrow)"
+            ${e.dashed ? 'stroke-dasharray="7 5"' : ''}/>`;
     s += edgeLabelMarkup(e);
     s += `</g>`;
     return s;
   }
-  function edgeLabelMarkup(e){
+
+  function edgeLabelMarkup(e) {
     if (!e.label) return '';
     const m = edgeMid(e);
     const w = measure(e.label, '700 12px Inter, Arial, sans-serif') + 14;
-    return `<rect x="${m.x - w/2}" y="${m.y - 10}" width="${w}" height="20" rx="5" fill="#ffffff" stroke="#e2e8f0" pointer-events="none"/>` +
-           `<text x="${m.x}" y="${m.y}" text-anchor="middle" dominant-baseline="middle" font-family='Inter, Arial, sans-serif' font-size="12" font-weight="700" fill="#475569" pointer-events="none">${esc(e.label)}</text>`;
+    return `<rect x="${m.x - w / 2}" y="${m.y - 10}" width="${w}" height="20" rx="5"
+              fill="#ffffff" stroke="#e2e8f0" pointer-events="none"/>` +
+           `<text x="${m.x}" y="${m.y}" text-anchor="middle" dominant-baseline="middle"
+              font-family='Inter, Arial, sans-serif' font-size="12" font-weight="700"
+              fill="#475569" pointer-events="none">${esc(e.label)}</text>`;
   }
 
-  function render(){
+  /* =====================================================================
+     RENDER
+     ===================================================================== */
+  function render() {
     edgesLayer.innerHTML = state.edges.map(edgeMarkup).join('');
     nodesLayer.innerHTML = state.nodes.map(n => nodeMarkup(n, true)).join('');
     updateInspector();
     applyView();
   }
-  function scheduleRender(){
+
+  function scheduleRender() {
     if (rafPending) return;
     rafPending = true;
-    requestAnimationFrame(()=>{ rafPending = false; render(); });
+    requestAnimationFrame(() => { rafPending = false; render(); });
   }
-  function applyView(){
-    viewport.setAttribute('transform', `translate(${state.pan.x},${state.pan.y}) scale(${state.zoom})`);
+
+  function applyView() {
+    viewport.setAttribute('transform',
+      `translate(${state.pan.x},${state.pan.y}) scale(${state.zoom})`);
     updateGrid();
     zoomLabel.textContent = Math.round(state.zoom * 100) + '%';
   }
-  function updateGrid(){
+
+  function updateGrid() {
     const k = state.zoom;
-    const major = 50*k, minor = 10*k;
-    canvasWrap.style.backgroundSize = `${major}px ${major}px, ${major}px ${major}px, ${minor}px ${minor}px, ${minor}px ${minor}px`;
-    canvasWrap.style.backgroundPosition = `${state.pan.x}px ${state.pan.y}px, ${state.pan.x}px ${state.pan.y}px, ${state.pan.x}px ${state.pan.y}px, ${state.pan.x}px ${state.pan.y}px`;
+    const major = 50 * k, minor = 10 * k;
+    canvasWrap.style.backgroundSize =
+      `${major}px ${major}px, ${major}px ${major}px, ${minor}px ${minor}px, ${minor}px ${minor}px`;
+    canvasWrap.style.backgroundPosition =
+      `${state.pan.x}px ${state.pan.y}px, ${state.pan.x}px ${state.pan.y}px, ` +
+      `${state.pan.x}px ${state.pan.y}px, ${state.pan.x}px ${state.pan.y}px`;
   }
 
-  function snapshot(){ return JSON.stringify({ nodes:state.nodes, edges:state.edges }); }
-  function pushHistory(){
+  /* =====================================================================
+     HISTORY
+     ===================================================================== */
+  function snapshot() {
+    return JSON.stringify({ nodes: state.nodes, edges: state.edges });
+  }
+
+  function pushHistory() {
     const snap = snapshot();
     if (history[hIndex] === snap) return;
-    history = history.slice(0, hIndex+1);
+    history = history.slice(0, hIndex + 1);
     history.push(snap);
     if (history.length > 80) history.shift();
     hIndex = history.length - 1;
     updateHistoryButtons();
     autosave();
   }
-  function applySnapshot(snap){
+
+  function applySnapshot(snap) {
     const d = JSON.parse(snap);
-    state.nodes = d.nodes; state.edges = d.edges; state.sel = null;
-    render(); updateHistoryButtons(); autosave();
+    state.nodes = d.nodes;
+    state.edges = d.edges;
+    state.sel = null;
+    render();
+    updateHistoryButtons();
+    autosave();
   }
-  function undo(){ if (hIndex > 0){ hIndex--; applySnapshot(history[hIndex]); } }
-  function redo(){ if (hIndex < history.length-1){ hIndex++; applySnapshot(history[hIndex]); } }
-  function updateHistoryButtons(){
+
+  function undo() { if (hIndex > 0) { hIndex--; applySnapshot(history[hIndex]); } }
+  function redo() { if (hIndex < history.length - 1) { hIndex++; applySnapshot(history[hIndex]); } }
+
+  function updateHistoryButtons() {
     document.getElementById('btnUndo').disabled = hIndex <= 0;
     document.getElementById('btnRedo').disabled = hIndex >= history.length - 1;
   }
 
-  function makeNode(type, x, y){
-    const size = SIZES[type] || [160,80];
-    return { id:uid(), type, x, y, w:size[0], h:size[1],
+  /* =====================================================================
+     NODE CREATION
+     ===================================================================== */
+  function makeNode(type, x, y) {
+    const size = SIZES[type] || [160, 80];
+    return {
+      id: uid(),
+      type,
+      x, y,
+      w: size[0],
+      h: size[1],
       text: TEXTS[type] != null ? TEXTS[type] : '',
-      fill:'#eef2ff', stroke:'#4f46e5', textColor:'#1e293b', fontSize:14, strokeWidth:2 };
+      fill: '#eef2ff',
+      stroke: '#4f46e5',
+      textColor: '#1e293b',
+      fontSize: 14,
+      strokeWidth: 2
+    };
   }
-  function addNode(type, cx, cy, center){
+
+  function addNode(type, cx, cy, center) {
     const n = makeNode(type, 0, 0);
-    if (center){ n.x = Math.round((cx - n.w/2)/GRID)*GRID; n.y = Math.round((cy - n.h/2)/GRID)*GRID; }
-    else { n.x = cx; n.y = cy; }
+    if (center) {
+      n.x = Math.round((cx - n.w / 2) / GRID) * GRID;
+      n.y = Math.round((cy - n.h / 2) / GRID) * GRID;
+    } else {
+      n.x = cx; n.y = cy;
+    }
     state.nodes.push(n);
-    state.sel = { type:'node', id:n.id };
-    pushHistory(); render();
+    state.sel = { type: 'node', id: n.id };
+    pushHistory();
+    render();
     if (isMobile()) closeDrawers();
     return n;
   }
 
-  function screenToWorld(cx, cy){
+  /* =====================================================================
+     COORDINATE HELPERS
+     ===================================================================== */
+  function screenToWorld(cx, cy) {
     const r = svg.getBoundingClientRect();
-    return { x:(cx - r.left - state.pan.x)/state.zoom, y:(cy - r.top - state.pan.y)/state.zoom };
+    return {
+      x: (cx - r.left - state.pan.x) / state.zoom,
+      y: (cy - r.top - state.pan.y) / state.zoom
+    };
   }
-  function getBounds(pad){
+
+  function getBounds(pad) {
     pad = pad || 40;
-    if (!state.nodes.length) return { x:0, y:0, w:900, h:620 };
-    let x1=Infinity,y1=Infinity,x2=-Infinity,y2=-Infinity;
-    for (const n of state.nodes){
-      x1=Math.min(x1,n.x); y1=Math.min(y1,n.y);
-      x2=Math.max(x2,n.x+n.w); y2=Math.max(y2,n.y+n.h);
+    if (!state.nodes.length) return { x: 0, y: 0, w: 900, h: 620 };
+    let x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
+    for (const n of state.nodes) {
+      x1 = Math.min(x1, n.x); y1 = Math.min(y1, n.y);
+      x2 = Math.max(x2, n.x + n.w); y2 = Math.max(y2, n.y + n.h);
     }
-    return { x:x1-pad, y:y1-pad, w:(x2-x1)+pad*2, h:(y2-y1)+pad*2 };
+    return { x: x1 - pad, y: y1 - pad, w: (x2 - x1) + pad * 2, h: (y2 - y1) + pad * 2 };
   }
-  function drag(onMove, onUp){
+
+  /* =====================================================================
+     DRAG HELPER
+     ===================================================================== */
+  function drag(onMove, onUp) {
     const move = ev => { ev.preventDefault(); onMove(ev); };
     const up = ev => {
       document.removeEventListener('pointermove', move);
@@ -693,30 +902,49 @@
     document.addEventListener('pointerup', up);
     document.addEventListener('pointercancel', up);
   }
-  function select(sel){ state.sel = sel; render(); }
-  function getSelected(){
-    if (!state.sel) return null;
-    if (state.sel.type === 'node'){ const n = getNode(state.sel.id); return n ? { kind:'node', item:n } : null; }
-    const e = state.edges.find(x => x.id === state.sel.id);
-    return e ? { kind:'edge', item:e } : null;
+
+  /* =====================================================================
+     SELECTION
+     ===================================================================== */
+  function select(sel) {
+    state.sel = sel;
+    render();
   }
 
+  function getSelected() {
+    if (!state.sel) return null;
+    if (state.sel.type === 'node') {
+      const n = getNode(state.sel.id);
+      return n ? { kind: 'node', item: n } : null;
+    }
+    const e = state.edges.find(x => x.id === state.sel.id);
+    return e ? { kind: 'edge', item: e } : null;
+  }
+
+  /* =====================================================================
+     POINTER INTERACTIONS
+     ===================================================================== */
   svg.addEventListener('pointerdown', e => {
     if (e.button === 2) return;
     if (editingId) commitTextEdit(true);
+
     const t = e.target;
     const handleEl = t.closest ? t.closest('.handle') : null;
     const anchorEl = t.closest ? t.closest('.anchor') : null;
-    const nodeEl = t.closest ? t.closest('.node') : null;
-    const edgeEl = t.closest ? t.closest('.edge') : null;
-    if (handleEl){ e.preventDefault(); startResize(e, handleEl); return; }
-    if (anchorEl){ e.preventDefault(); startConnect(e, anchorEl); return; }
-    if (nodeEl){ e.preventDefault(); startNodeDrag(e, nodeEl); return; }
-    if (edgeEl){ e.preventDefault(); select({ type:'edge', id: edgeEl.dataset.id }); return; }
-    e.preventDefault(); select(null); startPan(e);
+    const nodeEl   = t.closest ? t.closest('.node')   : null;
+    const edgeEl   = t.closest ? t.closest('.edge')   : null;
+
+    if (handleEl) { e.preventDefault(); startResize(e, handleEl); return; }
+    if (anchorEl) { e.preventDefault(); startConnect(e, anchorEl); return; }
+    if (nodeEl)   { e.preventDefault(); startNodeDrag(e, nodeEl); return; }
+    if (edgeEl)   { e.preventDefault(); select({ type: 'edge', id: edgeEl.dataset.id }); return; }
+
+    e.preventDefault();
+    select(null);
+    startPan(e);
   });
 
-  function startPan(e){
+  function startPan(e) {
     const sx = e.clientX, sy = e.clientY;
     const px = state.pan.x, py = state.pan.y;
     svg.style.cursor = 'grabbing';
@@ -727,57 +955,80 @@
     }, () => { svg.style.cursor = ''; });
   }
 
-  function startNodeDrag(e, nodeEl){
+  function startNodeDrag(e, nodeEl) {
     const node = getNode(nodeEl.dataset.id);
     if (!node) return;
-    select({ type:'node', id: node.id });
+    select({ type: 'node', id: node.id });
+
     const start = screenToWorld(e.clientX, e.clientY);
     const ox = node.x, oy = node.y;
     let moved = false;
+
     drag(ev => {
       const p = screenToWorld(ev.clientX, ev.clientY);
       let nx = ox + (p.x - start.x);
       let ny = oy + (p.y - start.y);
-      if (state.snap){ nx = Math.round(nx/GRID)*GRID; ny = Math.round(ny/GRID)*GRID; }
-      if (nx !== node.x || ny !== node.y){ node.x = nx; node.y = ny; moved = true; scheduleRender(); }
-    }, () => { if (moved){ pushHistory(); render(); } });
+      if (state.snap) {
+        nx = Math.round(nx / GRID) * GRID;
+        ny = Math.round(ny / GRID) * GRID;
+      }
+      if (nx !== node.x || ny !== node.y) {
+        node.x = nx; node.y = ny; moved = true;
+        scheduleRender();
+      }
+    }, () => {
+      if (moved) { pushHistory(); render(); }
+    });
   }
 
-  function startResize(e, handleEl){
+  function startResize(e, handleEl) {
     if (!state.sel || state.sel.type !== 'node') return;
     const node = getNode(state.sel.id);
     if (!node) return;
+
     const h = handleEl.dataset.handle;
     const start = screenToWorld(e.clientX, e.clientY);
-    const o = { x:node.x, y:node.y, w:node.w, h:node.h };
+    const o = { x: node.x, y: node.y, w: node.w, h: node.h };
     let changed = false;
+
     drag(ev => {
       const p = screenToWorld(ev.clientX, ev.clientY);
       let dx = p.x - start.x, dy = p.y - start.y;
-      if (state.snap){ dx = Math.round(dx/GRID)*GRID; dy = Math.round(dy/GRID)*GRID; }
+      if (state.snap) {
+        dx = Math.round(dx / GRID) * GRID;
+        dy = Math.round(dy / GRID) * GRID;
+      }
       let x = o.x, y = o.y, w = o.w, hh = o.h;
-      if (h.indexOf('w') > -1){ const nw = Math.max(MIN_W, o.w-dx); x = o.x + (o.w-nw); w = nw; }
-      if (h.indexOf('e') > -1) w = Math.max(MIN_W, o.w + dx);
-      if (h.indexOf('n') > -1){ const nh = Math.max(MIN_H, o.h-dy); y = o.y + (o.h-nh); hh = nh; }
-      if (h.indexOf('s') > -1) hh = Math.max(MIN_H, o.h + dy);
+
+      if (h.indexOf('w') > -1) { const nw = Math.max(MIN_W, o.w - dx); x = o.x + (o.w - nw); w = nw; }
+      if (h.indexOf('e') > -1) { w = Math.max(MIN_W, o.w + dx); }
+      if (h.indexOf('n') > -1) { const nh = Math.max(MIN_H, o.h - dy); y = o.y + (o.h - nh); hh = nh; }
+      if (h.indexOf('s') > -1) { hh = Math.max(MIN_H, o.h + dy); }
+
       node.x = x; node.y = y; node.w = w; node.h = hh;
       changed = true;
       scheduleRender();
-    }, () => { if (changed){ pushHistory(); render(); } });
+    }, () => {
+      if (changed) { pushHistory(); render(); }
+    });
   }
 
-  function startConnect(e, anchorEl){
+  function startConnect(e, anchorEl) {
     const nodeEl = anchorEl.closest('.node');
     if (!nodeEl) return;
     const node = getNode(nodeEl.dataset.id);
     if (!node) return;
     const side = anchorEl.dataset.side;
     const p1 = anchorPoint(node, side);
+
     const temp = document.createElementNS(NS, 'path');
-    temp.setAttribute('fill','none'); temp.setAttribute('stroke','#4f46e5');
-    temp.setAttribute('stroke-width','2'); temp.setAttribute('stroke-dasharray','6 5');
-    temp.setAttribute('pointer-events','none');
+    temp.setAttribute('fill', 'none');
+    temp.setAttribute('stroke', '#4f46e5');
+    temp.setAttribute('stroke-width', '2');
+    temp.setAttribute('stroke-dasharray', '6 5');
+    temp.setAttribute('pointer-events', 'none');
     edgesLayer.appendChild(temp);
+
     drag(ev => {
       const p = screenToWorld(ev.clientX, ev.clientY);
       const c = offsetPt(p1, side, 55);
@@ -789,8 +1040,12 @@
       if (!targetEl) return;
       const toId = targetEl.dataset.id;
       if (toId === node.id) return;
-      state.edges.push({ id:uid(), from:node.id, to:toId, color:'#64748b', width:2, dashed:false, label:'' });
-      pushHistory(); render();
+      state.edges.push({
+        id: uid(), from: node.id, to: toId,
+        color: '#64748b', width: 2, dashed: false, label: ''
+      });
+      pushHistory();
+      render();
     });
   }
 
@@ -801,42 +1056,52 @@
     const k = state.zoom;
     const factor = Math.exp(-e.deltaY * 0.0016);
     const nk = clamp(k * factor, 0.2, 3);
-    state.pan.x = mx - (mx - state.pan.x) * (nk/k);
-    state.pan.y = my - (my - state.pan.y) * (nk/k);
+    state.pan.x = mx - (mx - state.pan.x) * (nk / k);
+    state.pan.y = my - (my - state.pan.y) * (nk / k);
     state.zoom = nk;
     applyView();
-  }, { passive:false });
+  }, { passive: false });
 
   svg.addEventListener('dblclick', e => {
     const nodeEl = e.target.closest ? e.target.closest('.node') : null;
-    if (nodeEl){ const n = getNode(nodeEl.dataset.id); if (n) startTextEdit(n); return; }
+    if (nodeEl) {
+      const n = getNode(nodeEl.dataset.id);
+      if (n) startTextEdit(n);
+      return;
+    }
     const edgeEl = e.target.closest ? e.target.closest('.edge') : null;
-    if (edgeEl){
-      select({ type:'edge', id: edgeEl.dataset.id });
+    if (edgeEl) {
+      select({ type: 'edge', id: edgeEl.dataset.id });
       if (isMobile()) openDrawer('inspector');
       setTimeout(() => document.getElementById('propText').focus(), 30);
     }
   });
 
-  function startTextEdit(node){
+  /* =====================================================================
+     INLINE TEXT EDITOR
+     ===================================================================== */
+  function startTextEdit(node) {
     const k = state.zoom;
     textEditor.style.display = 'block';
-    textEditor.style.left = (node.x*k + state.pan.x) + 'px';
-    textEditor.style.top = (node.y*k + state.pan.y) + 'px';
-    textEditor.style.width = (node.w*k) + 'px';
-    textEditor.style.minHeight = (node.h*k) + 'px';
-    textEditor.style.fontSize = (node.fontSize*k) + 'px';
+    textEditor.style.left   = (node.x * k + state.pan.x) + 'px';
+    textEditor.style.top    = (node.y * k + state.pan.y) + 'px';
+    textEditor.style.width  = (node.w * k) + 'px';
+    textEditor.style.minHeight = (node.h * k) + 'px';
+    textEditor.style.fontSize = (node.fontSize * k) + 'px';
     textEditor.style.color = node.textColor;
     textEditor.textContent = node.text || '';
     editingId = node.id;
     textEditor.focus();
+
     const range = document.createRange();
     range.selectNodeContents(textEditor);
     const sel = window.getSelection();
-    sel.removeAllRanges(); sel.addRange(range);
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
-  function commitTextEdit(save){
-    if (editingId && save){
+
+  function commitTextEdit(save) {
+    if (editingId && save) {
       const n = getNode(editingId);
       if (n) n.text = textEditor.innerText.replace(/\n$/, '');
     }
@@ -846,38 +1111,57 @@
     if (save) pushHistory();
     render();
   }
+
   textEditor.addEventListener('blur', () => { if (editingId) commitTextEdit(true); });
   textEditor.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); commitTextEdit(true); }
-    else if (e.key === 'Escape'){ e.preventDefault(); commitTextEdit(false); }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitTextEdit(true); }
+    else if (e.key === 'Escape') { e.preventDefault(); commitTextEdit(false); }
     e.stopPropagation();
   });
 
-  function buildPalette(){
+  /* =====================================================================
+     PALETTE
+     ===================================================================== */
+  function buildPalette() {
     shapeGrid.innerHTML = SHAPES.map(s => {
       let preview;
-      if (s.type === 'text'){
-        preview = `<rect x="6" y="6" width="52" height="32" rx="7" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/><text x="32" y="23" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#4f46e5" stroke="none">Aa</text>`;
+      if (s.type === 'text') {
+        preview = `<rect x="6" y="6" width="52" height="32" rx="7" fill="none"
+                     stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 3"/>
+                   <text x="32" y="23" text-anchor="middle" dominant-baseline="middle"
+                     font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700"
+                     fill="#4f46e5" stroke="none">Aa</text>`;
       } else {
-        preview = `<g transform="translate(6,6)" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6" stroke-linejoin="round">${shapePath(s.type, 52, 32)}</g>`;
+        preview = `<g transform="translate(6,6)" fill="#eef2ff" stroke="#4f46e5"
+                     stroke-width="1.6" stroke-linejoin="round">${shapePath(s.type, 52, 32)}</g>`;
       }
-      return `<div class="shape-item" draggable="true" data-type="${s.type}" title="${s.name}"><svg viewBox="0 0 64 44">${preview}</svg><span>${s.name}</span></div>`;
+      return `<div class="shape-item" draggable="true" data-type="${s.type}" title="${s.name}">
+                <svg viewBox="0 0 64 44">${preview}</svg>
+                <span>${s.name}</span>
+              </div>`;
     }).join('');
   }
+
   shapeGrid.addEventListener('dragstart', e => {
     const item = e.target.closest('.shape-item');
     if (!item) return;
     e.dataTransfer.setData('text/plain', item.dataset.type);
     e.dataTransfer.effectAllowed = 'copy';
   });
+
   shapeGrid.addEventListener('click', e => {
     const item = e.target.closest('.shape-item');
     if (!item) return;
     const r = svg.getBoundingClientRect();
-    const p = screenToWorld(r.left + r.width/2, r.top + r.height/2);
+    const p = screenToWorld(r.left + r.width / 2, r.top + r.height / 2);
     addNode(item.dataset.type, p.x, p.y, true);
   });
-  canvasWrap.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+
+  canvasWrap.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  });
+
   canvasWrap.addEventListener('drop', e => {
     e.preventDefault();
     const type = e.dataTransfer.getData('text/plain');
@@ -886,35 +1170,53 @@
     addNode(type, p.x, p.y, true);
   });
 
-  const propText = document.getElementById('propText');
-  const propFill = document.getElementById('propFill');
-  const propStroke = document.getElementById('propStroke');
+  /* =====================================================================
+     INSPECTOR
+     ===================================================================== */
+  const propText      = document.getElementById('propText');
+  const propFill      = document.getElementById('propFill');
+  const propStroke    = document.getElementById('propStroke');
   const propTextColor = document.getElementById('propTextColor');
-  const propFont = document.getElementById('propFont');
-  const propWidth = document.getElementById('propWidth');
-  const propDashed = document.getElementById('propDashed');
+  const propFont      = document.getElementById('propFont');
+  const propWidth     = document.getElementById('propWidth');
+  const propDashed    = document.getElementById('propDashed');
 
-  function setVal(el, v){ if (document.activeElement === el) return; el.value = v; }
-  function isHex(c){ return typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c); }
+  function setVal(el, v) {
+    if (document.activeElement === el) return;
+    el.value = v;
+  }
 
-  function updateInspector(){
-    const empty = document.getElementById('inspEmpty');
+  function isHex(c) { return typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c); }
+
+  function updateInspector() {
+    const empty  = document.getElementById('inspEmpty');
     const fields = document.getElementById('inspFields');
     const s = getSelected();
-    if (!s){ empty.style.display = 'block'; fields.style.display = 'none'; return; }
-    empty.style.display = 'none'; fields.style.display = 'block';
+
+    if (!s) {
+      empty.style.display = 'block';
+      fields.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    fields.style.display = 'block';
+
     const isNode = s.kind === 'node';
     const item = s.item;
     const isTextShape = isNode && item.type === 'text';
-    document.getElementById('fFill').style.display = (isNode && !isTextShape) ? 'block' : 'none';
-    document.getElementById('fStroke').style.display = (isNode && !isTextShape) || !isNode ? 'block' : 'none';
+
+    document.getElementById('fFill').style.display      = (isNode && !isTextShape) ? 'block' : 'none';
+    document.getElementById('fStroke').style.display    = (isNode && !isTextShape) || !isNode ? 'block' : 'none';
     document.getElementById('fTextColor').style.display = isNode ? 'block' : 'none';
-    document.getElementById('fFont').style.display = isNode ? 'block' : 'none';
-    document.getElementById('fDashed').style.display = isNode ? 'none' : 'block';
+    document.getElementById('fFont').style.display      = isNode ? 'block' : 'none';
+    document.getElementById('fDashed').style.display    = isNode ? 'none' : 'block';
+
     document.getElementById('lblStroke').textContent = isNode ? 'Border color' : 'Line color';
-    document.getElementById('lblWidth').textContent = isNode ? 'Border width' : 'Line width';
+    document.getElementById('lblWidth').textContent  = isNode ? 'Border width' : 'Line width';
+
     setVal(propText, isNode ? (item.text || '') : (item.label || ''));
-    if (isNode){
+
+    if (isNode) {
       setVal(propFill, isHex(item.fill) ? item.fill : '#eef2ff');
       setVal(propStroke, isHex(item.stroke) ? item.stroke : '#4f46e5');
       setVal(propTextColor, isHex(item.textColor) ? item.textColor : '#1e293b');
@@ -926,50 +1228,76 @@
       propDashed.checked = !!item.dashed;
     }
   }
-  function withSelected(fn){
+
+  function withSelected(fn) {
     const s = getSelected();
     if (!s) return;
     fn(s.item, s.kind);
     scheduleRender();
   }
-  propText.addEventListener('input', ()=> withSelected((item,kind)=>{ if (kind==='node') item.text = propText.value; else item.label = propText.value; }));
+
+  propText.addEventListener('input', () => withSelected((item, kind) => {
+    if (kind === 'node') item.text = propText.value;
+    else item.label = propText.value;
+  }));
   propText.addEventListener('change', pushHistory);
-  propFill.addEventListener('input', ()=> withSelected(item=>{ item.fill = propFill.value; }));
+
+  propFill.addEventListener('input', () => withSelected(item => { item.fill = propFill.value; }));
   propFill.addEventListener('change', pushHistory);
-  propStroke.addEventListener('input', ()=> withSelected((item,kind)=>{ if (kind==='node') item.stroke = propStroke.value; else item.color = propStroke.value; }));
+
+  propStroke.addEventListener('input', () => withSelected((item, kind) => {
+    if (kind === 'node') item.stroke = propStroke.value;
+    else item.color = propStroke.value;
+  }));
   propStroke.addEventListener('change', pushHistory);
-  propTextColor.addEventListener('input', ()=> withSelected(item=>{ item.textColor = propTextColor.value; }));
+
+  propTextColor.addEventListener('input', () => withSelected(item => { item.textColor = propTextColor.value; }));
   propTextColor.addEventListener('change', pushHistory);
-  propFont.addEventListener('input', ()=> withSelected(item=>{ item.fontSize = clamp(parseInt(propFont.value,10) || 14, 8, 48); }));
+
+  propFont.addEventListener('input', () => withSelected(item => {
+    item.fontSize = clamp(parseInt(propFont.value, 10) || 14, 8, 48);
+  }));
   propFont.addEventListener('change', pushHistory);
-  propWidth.addEventListener('input', ()=> withSelected((item,kind)=>{
-    const v = clamp(parseInt(propWidth.value,10) || 0, 0, 10);
-    if (kind==='node') item.strokeWidth = v; else item.width = v;
+
+  propWidth.addEventListener('input', () => withSelected((item, kind) => {
+    const v = clamp(parseInt(propWidth.value, 10) || 0, 0, 10);
+    if (kind === 'node') item.strokeWidth = v; else item.width = v;
   }));
   propWidth.addEventListener('change', pushHistory);
-  propDashed.addEventListener('change', ()=>{ withSelected(item=>{ item.dashed = propDashed.checked; }); pushHistory(); });
 
-  function deleteSelected(){
+  propDashed.addEventListener('change', () => {
+    withSelected(item => { item.dashed = propDashed.checked; });
+    pushHistory();
+  });
+
+  /* =====================================================================
+     ACTIONS
+     ===================================================================== */
+  function deleteSelected() {
     if (!state.sel) return;
-    if (state.sel.type === 'node'){
+    if (state.sel.type === 'node') {
       state.nodes = state.nodes.filter(n => n.id !== state.sel.id);
       state.edges = state.edges.filter(e => e.from !== state.sel.id && e.to !== state.sel.id);
     } else {
       state.edges = state.edges.filter(e => e.id !== state.sel.id);
     }
     state.sel = null;
-    pushHistory(); render();
+    pushHistory();
+    render();
   }
-  function duplicateSelected(){
+
+  function duplicateSelected() {
     if (!state.sel || state.sel.type !== 'node') return;
     const n = getNode(state.sel.id);
     if (!n) return;
-    const copy = Object.assign({}, n, { id:uid(), x:n.x+24, y:n.y+24 });
+    const copy = Object.assign({}, n, { id: uid(), x: n.x + 24, y: n.y + 24 });
     state.nodes.push(copy);
-    state.sel = { type:'node', id: copy.id };
-    pushHistory(); render();
+    state.sel = { type: 'node', id: copy.id };
+    pushHistory();
+    render();
   }
-  function nudge(e){
+
+  function nudge(e) {
     if (!state.sel || state.sel.type !== 'node') return;
     const n = getNode(state.sel.id);
     if (!n) return;
@@ -986,272 +1314,162 @@
     clearTimeout(nudge._t);
     nudge._t = setTimeout(pushHistory, 350);
   }
-  function fitView(){
+
+  function fitView() {
     const b = getBounds(60);
     const r = svg.getBoundingClientRect();
-    const k = clamp(Math.min(r.width/b.w, r.height/b.h), 0.2, 1.6);
+    const k = clamp(Math.min(r.width / b.w, r.height / b.h), 0.2, 1.6);
     state.zoom = k;
-    state.pan.x = r.width/2 - (b.x + b.w/2)*k;
-    state.pan.y = r.height/2 - (b.y + b.h/2)*k;
+    state.pan.x = r.width / 2 - (b.x + b.w / 2) * k;
+    state.pan.y = r.height / 2 - (b.y + b.h / 2) * k;
     applyView();
   }
-  function zoomBy(factor){
+
+  function zoomBy(factor) {
     const r = svg.getBoundingClientRect();
-    const mx = r.width/2, my = r.height/2;
+    const mx = r.width / 2, my = r.height / 2;
     const k = state.zoom;
-    const nk = clamp(k*factor, 0.2, 3);
-    state.pan.x = mx - (mx - state.pan.x)*(nk/k);
-    state.pan.y = my - (my - state.pan.y)*(nk/k);
+    const nk = clamp(k * factor, 0.2, 3);
+    state.pan.x = mx - (mx - state.pan.x) * (nk / k);
+    state.pan.y = my - (my - state.pan.y) * (nk / k);
     state.zoom = nk;
     applyView();
   }
 
-  function autosave(){
+  /* =====================================================================
+     AUTOSAVE (localStorage)
+     ===================================================================== */
+  function autosave() {
     try {
       localStorage.setItem('flowmaker.autosave', JSON.stringify({
         nodes: state.nodes, edges: state.edges, saved: new Date().toISOString()
       }));
       flashSaveDot();
-    } catch (e){}
+    } catch (e) { /* ignore */ }
   }
-  function restoreAutosave(){
+
+  function restoreAutosave() {
     try {
       const raw = localStorage.getItem('flowmaker.autosave');
       if (!raw) return false;
       const d = JSON.parse(raw);
       if (!d || !Array.isArray(d.nodes) || !d.nodes.length) return false;
-      state.nodes = d.nodes; state.edges = d.edges || [];
+      state.nodes = d.nodes;
+      state.edges = d.edges || [];
       return true;
-    } catch (e){ return false; }
+    } catch (e) { return false; }
   }
 
-  /* =====================  VALIDATOR  ===================== */
-  const STOP_WORDS = new Set([
-    'the','a','an','and','or','but','in','on','at','to','for','of','with','by',
-    'from','how','what','why','when','where','which','that','this','is','are',
-    'was','were','be','been','being','have','has','had','do','does','did','will',
-    'would','can','could','should','may','might','must','shall','about','into',
-    'ka','ki','ke','ko','se','me','mein','hai','hain','koi','aur','ya','par',
-    'ye','wo','kya','kaise','kaisa','kaun','kab','kahan'
-  ]);
-  function extractKeywords(topic){
-    return topic.toLowerCase().replace(/[^\w\s\u0600-\u06FF]/g,' ').split(/\s+/)
-      .filter(w => w.length > 2 && !STOP_WORDS.has(w));
-  }
-  const TOPIC_SUGGESTIONS = [
-    { match:['tea','chai'], steps:['boil water','add tea leaves','add milk','add sugar','strain','serve'] },
-    { match:['coffee'], steps:['boil water','grind beans','brew','add milk','serve'] },
-    { match:['login','signin','sign in'], steps:['enter username','enter password','validate credentials','show dashboard','show error'] },
-    { match:['signup','sign up','register'], steps:['fill form','validate email','create account','send verification'] },
-    { match:['order','purchase','buy','checkout'], steps:['select item','add to cart','checkout','payment','confirmation'] },
-    { match:['payment','pay','transaction'], steps:['enter details','verify','process payment','success','failure'] },
-    { match:['search','find','lookup'], steps:['enter query','search database','show results','no results'] },
-    { match:['password','reset','forgot'], steps:['enter email','verify identity','reset password','confirm'] },
-    { match:['upload','download','file'], steps:['select file','validate','transfer','confirmation'] },
-    { match:['email','mail','message'], steps:['compose','add recipient','attach','send','confirmation'] }
-  ];
-
-  function validateFlowchart(topic){
-    const issues = [];
-    const nodes = state.nodes, edges = state.edges;
-    if (!nodes.length){
-      issues.push({ severity:'error', message:'Your canvas is empty. Add shapes to begin building the flowchart.' });
-      return summarize(issues);
-    }
-    const startNodes = nodes.filter(n => /start|begin|شروع|آغاز/i.test(n.text || ''));
-    const endNodes = nodes.filter(n => /end\b|finish|stop|اختتام|ختم|پایان/i.test(n.text || ''));
-    if (!startNodes.length) issues.push({ severity:'error', message:'No Start node found. Begin with a "Start / End" shape labeled "Start".' });
-    if (!endNodes.length) issues.push({ severity:'error', message:'No End node found. Conclude with a "Start / End" shape labeled "End".' });
-    nodes.forEach(n => {
-      const t = (n.text || '').trim();
-      if (!t){ if (n.type !== 'text') issues.push({ severity:'warning', message:`A "${n.type}" shape has no text. Add a clear label.`, nodeId:n.id }); }
-      else {
-        const placeholders = ['process','step','decision?','prepare','note','database','data','document'];
-        if (placeholders.includes(t.toLowerCase())) issues.push({ severity:'tip', message:`Node "${t}" still uses placeholder text. Rename it to the actual step.`, nodeId:n.id });
-      }
-    });
-    const decisions = nodes.filter(n => n.type === 'diamond');
-    decisions.forEach(d => {
-      const out = edges.filter(e => e.from === d.id);
-      if (out.length < 2) issues.push({ severity:'error', message:`Decision "${d.text || 'unnamed'}" needs at least 2 outgoing branches (Yes/No).`, nodeId:d.id });
-      const unlabeled = out.filter(e => !e.label || !e.label.trim());
-      if (unlabeled.length) issues.push({ severity:'warning', message:`Decision "${d.text || 'unnamed'}" has ${unlabeled.length} branch(es) without label. Add "Yes"/"No".`, nodeId:d.id });
-    });
-    nodes.forEach(n => {
-      const connected = edges.some(e => e.from === n.id || e.to === n.id);
-      if (!connected && n.type !== 'text') issues.push({ severity:'warning', message:`Node "${n.text || n.type}" is not connected to anything.`, nodeId:n.id });
-    });
-    if (startNodes.length){
-      const adj = {}; nodes.forEach(n => adj[n.id] = []);
-      edges.forEach(e => { if (adj[e.from]) adj[e.from].push(e.to); });
-      const visited = new Set();
-      const queue = startNodes.map(n => n.id);
-      queue.forEach(id => visited.add(id));
-      while (queue.length){
-        const cur = queue.shift();
-        (adj[cur] || []).forEach(next => { if (!visited.has(next)){ visited.add(next); queue.push(next); } });
-      }
-      nodes.forEach(n => {
-        if (!visited.has(n.id) && !startNodes.some(s => s.id === n.id) && n.type !== 'text')
-          issues.push({ severity:'warning', message:`Node "${n.text || n.type}" cannot be reached from Start.`, nodeId:n.id });
-      });
-    }
-    nodes.forEach(n => {
-      const hasOut = edges.some(e => e.from === n.id);
-      const isEndType = n.type === 'stadium' && /end|finish|stop|اختتام|ختم/i.test(n.text || '');
-      if (!hasOut && !isEndType && n.type !== 'text' && n.type !== 'note')
-        issues.push({ severity:'warning', message:`Node "${n.text || n.type}" is a dead end — no outgoing arrow.`, nodeId:n.id });
-    });
-    decisions.forEach(d => {
-      const out = edges.filter(e => e.from === d.id);
-      const targets = out.map(e => e.to);
-      const dupes = targets.filter((t,i) => targets.indexOf(t) !== i);
-      if (dupes.length) issues.push({ severity:'warning', message:`Decision "${d.text || 'unnamed'}" has branches to the same node.`, nodeId:d.id });
-    });
-    edges.forEach(e => { if (!getNode(e.to) || !getNode(e.from)) issues.push({ severity:'error', message:'A connector is broken — source or target node was deleted.' }); });
-    const keywords = extractKeywords(topic || '');
-    if (keywords.length){
-      const allText = nodes.map(n => (n.text || '').toLowerCase()).join(' ');
-      const matches = keywords.filter(k => allText.includes(k));
-      const ratio = matches.length / keywords.length;
-      if (ratio === 0) issues.push({ severity:'error', message:`None of the topic keywords appear in your flowchart. It doesn't look related to "${topic}".` });
-      else if (ratio < 0.4){
-        const missing = keywords.filter(k => !matches.includes(k));
-        issues.push({ severity:'warning', message:`Only ${matches.length}/${keywords.length} topic keywords appear. Consider: ${missing.slice(0,5).map(w => '"'+w+'"').join(', ')}.` });
-      } else if (ratio >= 0.7){
-        issues.push({ severity:'success', message:`Good coverage — ${matches.length}/${keywords.length} keywords from the topic are in the diagram.` });
-      }
-    }
-    if (topic){
-      const tl = topic.toLowerCase();
-      TOPIC_SUGGESTIONS.filter(g => g.match.some(m => tl.includes(m))).forEach(g => {
-        g.steps.forEach(step => {
-          const first = step.split(' ')[0];
-          const found = nodes.some(n => (n.text || '').toLowerCase().includes(step) || (n.text || '').toLowerCase().includes(first));
-          if (!found) issues.push({ severity:'tip', message:`For a "${topic}" flowchart, consider adding: "${step}".` });
-        });
-      });
-    }
-    return summarize(issues);
-  }
-  function summarize(issues){
-    const errors = issues.filter(i => i.severity === 'error').length;
-    const warnings = issues.filter(i => i.severity === 'warning').length;
-    const tips = issues.filter(i => i.severity === 'tip').length;
-    const successes = issues.filter(i => i.severity === 'success').length;
-    let score = 100 - errors*20 - warnings*8 - tips*2;
-    if (errors === 0 && warnings === 0) score = Math.max(score, 75);
-    score = clamp(score, 0, 100);
-    return { issues, score, errors, warnings, tips, successes };
-  }
-
-  const validatorModal = document.getElementById('validatorModal');
-  const topicInput = document.getElementById('topicInput');
-  const validatorResults = document.getElementById('validatorResults');
-  const issuesList = document.getElementById('issuesList');
-  const scoreNum = document.getElementById('scoreNum');
-  const scoreBreakdown = document.getElementById('scoreBreakdown');
-
-  function openValidator(){
-    closeDrawers();
-    validatorModal.classList.add('open');
-    setTimeout(() => topicInput.focus(), 120);
-    const saved = sessionStorage.getItem('flowmaker.lastTopic');
-    if (saved && !topicInput.value) topicInput.value = saved;
-  }
-  function closeValidator(){ validatorModal.classList.remove('open'); }
-  document.getElementById('btnCheck').addEventListener('click', openValidator);
-  document.getElementById('btnCloseValidator').addEventListener('click', closeValidator);
-  validatorModal.addEventListener('click', e => { if (e.target === validatorModal) closeValidator(); });
-  document.getElementById('btnRunCheck').addEventListener('click', runCheck);
-  topicInput.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); runCheck(); } });
-
-  function runCheck(){
-    const topic = topicInput.value.trim();
-    if (!topic){ toast('Please enter a topic first.'); topicInput.focus(); return; }
-    sessionStorage.setItem('flowmaker.lastTopic', topic);
-    const result = validateFlowchart(topic);
-    scoreNum.textContent = result.score;
-    scoreNum.className = 'score-num ' + (result.score >= 80 ? 'good' : result.score >= 50 ? 'warn' : 'bad');
-    const parts = [];
-    if (result.errors) parts.push(`<strong style="color:#dc2626">${result.errors} error${result.errors>1?'s':''}</strong>`);
-    if (result.warnings) parts.push(`<strong style="color:#d97706">${result.warnings} warning${result.warnings>1?'s':''}</strong>`);
-    if (result.tips) parts.push(`<strong style="color:#2563eb">${result.tips} tip${result.tips>1?'s':''}</strong>`);
-    if (result.successes) parts.push(`<strong style="color:#16a34a">${result.successes} pass</strong>`);
-    scoreBreakdown.innerHTML = parts.length ? parts.join(' · ') : 'Looks great!';
-    issuesList.innerHTML = '';
-    if (!result.issues.length){
-      issuesList.innerHTML = `<div class="issue-item issue-success"><span class="issue-icon">✓</span><div class="issue-body"><strong>Perfect!</strong> Your flowchart passes all checks.</div></div>`;
-    } else {
-      const order = { error:0, warning:1, tip:2, success:3 };
-      result.issues.slice().sort((a,b) => order[a.severity]-order[b.severity]).forEach(iss => {
-        const icon = iss.severity === 'error' ? '!' : iss.severity === 'warning' ? '!' : iss.severity === 'tip' ? 'i' : '✓';
-        const el = document.createElement('div');
-        el.className = 'issue-item issue-' + iss.severity;
-        el.innerHTML = `<span class="issue-icon">${icon}</span><div class="issue-body">${iss.message}${iss.nodeId?' <em style="opacity:.65">(tap to locate)</em>':''}</div>`;
-        if (iss.nodeId) el.addEventListener('click', () => { focusNode(iss.nodeId); closeValidator(); });
-        issuesList.appendChild(el);
-      });
-    }
-    validatorResults.style.display = 'block';
-    validatorResults.scrollIntoView({ behavior:'smooth', block:'start' });
-  }
-  function focusNode(nodeId){
-    const n = getNode(nodeId);
-    if (!n) return;
-    state.sel = { type:'node', id:nodeId };
-    const r = svg.getBoundingClientRect();
-    const cx = n.x + n.w/2, cy = n.y + n.h/2;
-    state.pan.x = r.width/2 - cx*state.zoom;
-    state.pan.y = r.height/2 - cy*state.zoom;
-    render();
-    toast('Jumped to: ' + (n.text || n.type));
-  }
-
-  /* =====================  EXPORT PNG (with footer + Cordova support)  ===================== */
-  function buildSVGString(){
+  /* =====================================================================
+     EXPORT PNG (with TAHA MUJTABA footer)
+     ===================================================================== */
+  function buildSVGString() {
     const b = getBounds(40);
     const parts = [];
-    parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(b.w*2)}" height="${Math.round(b.h*2)}" viewBox="${b.x} ${b.y} ${b.w} ${b.h}">`);
+    parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(b.w * 2)}" height="${Math.round(b.h * 2)}" viewBox="${b.x} ${b.y} ${b.w} ${b.h}">`);
     parts.push(`<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="#ffffff"/>`);
     parts.push(`<defs><marker id="arrow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M 0 1 L 11 6 L 0 11 z" fill="context-stroke"/></marker></defs>`);
-    for (const e of state.edges){
+
+    for (const e of state.edges) {
       const d = edgePathD(e);
       if (!d) continue;
-      parts.push(`<path d="${d}" fill="none" stroke="${e.color}" stroke-width="${e.width}" marker-end="url(#arrow)" ${e.dashed?'stroke-dasharray="7 5"':''}/>`);
-      if (e.label){
+      parts.push(`<path d="${d}" fill="none" stroke="${e.color}" stroke-width="${e.width}" marker-end="url(#arrow)" ${e.dashed ? 'stroke-dasharray="7 5"' : ''}/>`);
+      if (e.label) {
         const m = edgeMid(e);
         const w = measure(e.label, '700 12px Inter, Arial, sans-serif') + 14;
-        parts.push(`<rect x="${m.x - w/2}" y="${m.y - 10}" width="${w}" height="20" rx="5" fill="#ffffff" stroke="#e2e8f0"/>`);
+        parts.push(`<rect x="${m.x - w / 2}" y="${m.y - 10}" width="${w}" height="20" rx="5" fill="#ffffff" stroke="#e2e8f0"/>`);
         parts.push(`<text x="${m.x}" y="${m.y}" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#475569">${esc(e.label)}</text>`);
       }
     }
+
     for (const n of state.nodes) parts.push(nodeMarkup(n, false));
+
     parts.push('</svg>');
     return parts.join('');
   }
 
-  function exportPNG(){
-    if (!state.nodes.length){ toast('Nothing to export yet.'); return; }
+
+  /* =====================================================================
+     SAVE PNG: Cordova Gallery on Android, normal download in browsers
+     ===================================================================== */
+  function saveCanvasImageToDevice(canvas) {
+    const fileName = 'flowmaker-' + Date.now() + '.png';
+    const photosApi = window.boogiePhotosApi;
+
+    // Cordova APK: use the native MediaStore/photo-library plugin.
+    if (window.cordova && !photosApi) {
+      toast('Gallery plugin is missing. Rebuild the APK using the supplied workflow.');
+      return;
+    }
+
+    if (photosApi) {
+      (async function () {
+        try {
+          // Write permission is only needed on older Android versions (Android 9 and below).
+          // Android 10+ saves app-created images through scoped storage / MediaStore.
+          if (typeof photosApi.requestPermission === 'function') {
+            await photosApi.requestPermission({ write: true });
+          }
+
+          await photosApi.save(canvas.toDataURL('image/png'), { album: 'LUMINA' });
+          toast('PNG saved to your phone Gallery');
+        } catch (err) {
+          console.error('Gallery save failed:', err);
+          toast('Could not save image. Check app permissions in Android Settings.');
+        }
+      })();
+      return;
+    }
+
+    // Ordinary browser: keep the original download behavior.
+    canvas.toBlob(function (blob) {
+      if (!blob) {
+        toast('PNG export failed.');
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      toast('PNG downloaded');
+    }, 'image/png');
+  }
+
+  function exportPNG() {
+    if (!state.nodes.length) { toast('Nothing to export yet.'); return; }
     const svgStr = buildSVGString();
     const b = getBounds(40);
+
     const img = new Image();
-    img.onload = function (){
-      const scale = 2, footerH = 46;
-      const wPx = Math.round(b.w*scale);
-      const hPx = Math.round(b.h*scale);
-      const fPx = Math.round(footerH*scale);
-      const canvas = document.createElement('canvas');
-      canvas.width = wPx;
+    img.onload = function () {
+      const scale   = 2;      // crisp 2× export
+      const footerH = 46;     // logical px
+      const wPx     = Math.round(b.w * scale);
+      const hPx     = Math.round(b.h * scale);
+      const fPx     = Math.round(footerH * scale);
+
+      const canvas  = document.createElement('canvas');
+      canvas.width  = wPx;
       canvas.height = hPx + fPx;
       const ctx = canvas.getContext('2d');
+
+      /* white page background */
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      /* draw the diagram */
       ctx.drawImage(img, 0, 0, wPx, hPx);
 
+      /* ---- footer band ---- */
       const fy = hPx;
+
       ctx.fillStyle = '#fbfcfe';
       ctx.fillRect(0, fy, canvas.width, fPx);
+
       ctx.strokeStyle = '#e3e8f0';
       ctx.lineWidth = Math.max(1, scale);
       ctx.beginPath();
@@ -1259,79 +1477,53 @@
       ctx.lineTo(canvas.width, fy + 0.5);
       ctx.stroke();
 
-      const fontSize = 14*scale;
-      const prefix = 'All rights reserved by ';
-      const name = 'TAHA MUJTABA';
+      /* ---- footer text ---- */
+      const fontSize = 14 * scale;
+      const prefix   = 'All rights reserved by ';
+      const name     = 'TAHA MUJTABA';
+
       ctx.textBaseline = 'middle';
-      ctx.textAlign = 'left';
+      ctx.textAlign    = 'left';
+
       ctx.font = `600 ${fontSize}px Inter, "Segoe UI", Arial, sans-serif`;
       const wPrefix = ctx.measureText(prefix).width;
+
       ctx.font = `800 ${fontSize}px Inter, "Segoe UI", Arial, sans-serif`;
       const wName = ctx.measureText(name).width;
+
       const totalW = wPrefix + wName;
-      const startX = (canvas.width - totalW)/2;
-      const cy = fy + fPx/2 + (1*scale);
+      const startX = (canvas.width - totalW) / 2;
+      const cy     = fy + fPx / 2 + (1 * scale);
+
+      // prefix (muted)
       ctx.font = `600 ${fontSize}px Inter, "Segoe UI", Arial, sans-serif`;
       ctx.fillStyle = '#6b7a90';
       ctx.fillText(prefix, startX, cy);
+
+      // name (accent, bold)
       ctx.font = `800 ${fontSize}px Inter, "Segoe UI", Arial, sans-serif`;
       ctx.fillStyle = '#4f46e5';
       ctx.fillText(name, startX + wPrefix, cy);
 
-      canvas.toBlob(blob => {
-        const filename = 'flowmaker-' + Date.now() + '.png';
-        if (!(window.cordova && window.cordova.file)){
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 1500);
-          toast('PNG downloaded');
-          return;
-        }
-        saveBlobCordova(blob, filename);
-      }, 'image/png');
+      /* ---- save ---- */
+      saveCanvasImageToDevice(canvas);
+
     };
-    img.onerror = function (){ toast('Export failed.'); };
+    img.onerror = function () { toast('Export failed.'); };
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
   }
 
-  function saveBlobCordova(blob, filename){
-    const reader = new FileReader();
-    reader.onloadend = function (){
-      const base64 = reader.result.split(',')[1];
-      const dir = cordova.file.externalApplicationStorageDirectory || cordova.file.dataDirectory;
-      window.resolveLocalFileSystemURL(dir, function (dirEntry){
-        dirEntry.getFile(filename, { create:true }, function (fileEntry){
-          fileEntry.createWriter(function (writer){
-            writer.onwriteend = function (){
-              toast('Saved: ' + filename);
-              if (window.cordova.plugins && window.cordova.plugins.fileOpener2){
-                cordova.plugins.fileOpener2.showOpenWithDialog(fileEntry.toURL(), 'image/png', {
-                  error: function (){ toast('Saved to app storage'); }
-                });
-              }
-            };
-            writer.onerror = function (e){ toast('Save failed: ' + e.toString()); };
-            writer.write(base64);
-          }, function (e){ toast('File error: ' + e.code); });
-        });
-      }, function (e){ toast('Storage error: ' + e.code); });
-    };
-    reader.readAsDataURL(blob);
-  }
-
+  /* =====================================================================
+     TOOLBAR WIRING
+     ===================================================================== */
   document.getElementById('btnExport').addEventListener('click', exportPNG);
   document.getElementById('btnUndo').addEventListener('click', undo);
   document.getElementById('btnRedo').addEventListener('click', redo);
   document.getElementById('btnDelete').addEventListener('click', deleteSelected);
   document.getElementById('btnDel2').addEventListener('click', deleteSelected);
   document.getElementById('btnDup').addEventListener('click', duplicateSelected);
-  document.getElementById('btnZoomIn').addEventListener('click', ()=> zoomBy(1.2));
-  document.getElementById('btnZoomOut').addEventListener('click', ()=> zoomBy(1/1.2));
+  document.getElementById('btnZoomIn').addEventListener('click', () => zoomBy(1.2));
+  document.getElementById('btnZoomOut').addEventListener('click', () => zoomBy(1 / 1.2));
   document.getElementById('btnFit').addEventListener('click', fitView);
 
   document.getElementById('snapToggle').addEventListener('change', e => {
@@ -1339,48 +1531,70 @@
     toast('Snap to grid ' + (state.snap ? 'on' : 'off'));
   });
 
+  /* =====================================================================
+     KEYBOARD SHORTCUTS
+     ===================================================================== */
   document.addEventListener('keydown', e => {
     const t = e.target;
     const tag = (t.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || t.isContentEditable) return;
+
     const ctrl = e.ctrlKey || e.metaKey;
     const k = (e.key || '').toLowerCase();
-    if (ctrl && k === 'z'){ e.preventDefault(); e.shiftKey ? redo() : undo(); }
-    else if (ctrl && k === 'y'){ e.preventDefault(); redo(); }
-    else if (ctrl && k === 'd'){ e.preventDefault(); duplicateSelected(); }
-    else if (ctrl && k === 'e'){ e.preventDefault(); exportPNG(); }
-    else if (ctrl && k === 'k'){ e.preventDefault(); openValidator(); }
-    else if (e.key === 'Delete' || e.key === 'Backspace'){ e.preventDefault(); deleteSelected(); }
-    else if (e.key.indexOf('Arrow') === 0) nudge(e);
-    else if (e.key === 'Escape'){
-      if (validatorModal.classList.contains('open')) closeValidator();
-      else { state.sel = null; render(); closeDrawers(); }
-    }
-    else if (k === 'f') fitView();
+
+    if (ctrl && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
+    else if (ctrl && k === 'y') { e.preventDefault(); redo(); }
+    else if (ctrl && k === 'd') { e.preventDefault(); duplicateSelected(); }
+    else if (ctrl && k === 'e') { e.preventDefault(); exportPNG(); }
+    else if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteSelected(); }
+    else if (e.key.indexOf('Arrow') === 0) { nudge(e); }
+    else if (e.key === 'Escape') { state.sel = null; render(); closeDrawers(); }
+    else if (k === 'f') { fitView(); }
   });
 
-  function seedSample(){
-    const a = makeNode('stadium', 140, 60); a.text='Start'; a.w=150; a.h=60; a.fill='#dcfce7'; a.stroke='#16a34a';
-    const b = makeNode('rect', 135, 180); b.text='Process Data'; b.w=160; b.h=80;
-    const c = makeNode('diamond', 145, 320); c.text='Valid?'; c.w=140; c.h=100; c.fill='#fef3c7'; c.stroke='#d97706';
-    const d = makeNode('stadium', 400, 340); d.text='End'; d.w=150; d.h=60; d.fill='#fee2e2'; d.stroke='#dc2626';
+  /* =====================================================================
+     INIT
+     ===================================================================== */
+  function seedSample() {
+    const a = makeNode('stadium', 140, 60);
+    a.text = 'Start'; a.w = 150; a.h = 60; a.fill = '#dcfce7'; a.stroke = '#16a34a';
+
+    const b = makeNode('rect', 135, 180);
+    b.text = 'Process Data'; b.w = 160; b.h = 80;
+
+    const c = makeNode('diamond', 145, 320);
+    c.text = 'Valid?'; c.w = 140; c.h = 100; c.fill = '#fef3c7'; c.stroke = '#d97706';
+
+    const d = makeNode('stadium', 400, 340);
+    d.text = 'End'; d.w = 150; d.h = 60; d.fill = '#fee2e2'; d.stroke = '#dc2626';
+
     state.nodes.push(a, b, c, d);
-    state.edges.push({ id:uid(), from:a.id, to:b.id, color:'#64748b', width:2, dashed:false, label:'' });
-    state.edges.push({ id:uid(), from:b.id, to:c.id, color:'#64748b', width:2, dashed:false, label:'' });
-    state.edges.push({ id:uid(), from:c.id, to:d.id, color:'#16a34a', width:2, dashed:false, label:'Yes' });
+
+    state.edges.push({ id: uid(), from: a.id, to: b.id, color: '#64748b', width: 2, dashed: false, label: '' });
+    state.edges.push({ id: uid(), from: b.id, to: c.id, color: '#64748b', width: 2, dashed: false, label: '' });
+    const e3 = { id: uid(), from: c.id, to: d.id, color: '#16a34a', width: 2, dashed: false, label: 'Yes' };
+    state.edges.push(e3);
   }
 
-  function init(){
+  function init() {
     buildPalette();
+
     const restored = restoreAutosave();
     if (!restored) seedSample();
-    history = []; hIndex = -1;
+
+    history = [];
+    hIndex = -1;
     pushHistory();
     render();
-    if (restored) requestAnimationFrame(fitView);
+
+    if (restored) {
+      requestAnimationFrame(fitView);
+    }
     updateHistoryButtons();
   }
+
   init();
+
 })();
 </script>
 </body>

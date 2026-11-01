@@ -27,63 +27,27 @@ jobs:
       - name: Install Cordova & Build APK with Icon
         run: |
           npm install -g cordova
-
+          
           # 1. Create Cordova project
-          cordova create app com.flowmaker.tm "FLOWCHART MAKER"
-
+          cordova create app com.flow.tm "FLOWCHART MAKER "
+          
           # 2. Copy ALL HTML and web files to www folder
           cp -r *.html *.png *.jpg *.jpeg *.css *.js app/www/ 2>/dev/null || true
-
-          # 3. Add Custom Icon to Config if icon.png exists
-          if [ -f "icon.png" ]; then
-            cp icon.png app/www/icon.png
-            sed -i '/<\/widget>/i \    <icon src="www/icon.png" />' app/config.xml
-          fi
-
+          
+          # 3. Add Custom Icon and Android Permissions to config.xml
           cd app
-
-          # 4. Add plugins needed for saving / downloading files
-          cordova plugin add cordova-plugin-file
-          cordova plugin add cordova-plugin-file-opener2
-
-          # 5. Add Android platform
+          
+          # Add Storage Permissions inside the widget tag in config.xml
+          sed -i '/<\/widget>/i \    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/uses-permission[@name=\"android.permission.WRITE_EXTERNAL_STORAGE\"]">\n        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />\n    </edit-config>' config.xml
+          sed -i '/<\/widget>/i \    <preference name="AndroidInsecureFileModeOverhead" value="true" />' config.xml
+          
+          if [ -f "../icon.png" ]; then
+            cp ../icon.png www/icon.png
+            sed -i '/<\/widget>/i \    <icon src="www/icon.png" />' config.xml
+          fi
+          
+          # 4. Add Android Platform & Build
           cordova platform add android
-
-          # 6. Inject storage permissions + legacy storage flag into AndroidManifest.xml
-          python3 << 'EOF'
-import os
-
-path = 'platforms/android/app/src/main/AndroidManifest.xml'
-if not os.path.exists(path):
-    raise SystemExit('Manifest not found: ' + path)
-
-with open(path, 'r') as f:
-    content = f.read()
-
-perms = (
-    '    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />\n'
-    '    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />\n'
-    '    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />\n'
-)
-
-# add permissions once, right before <application
-if 'WRITE_EXTERNAL_STORAGE' not in content:
-    content = content.replace('<application', perms + '    <application', 1)
-
-# add legacy storage flag for Android 10 so Download/ folder writes work
-content = content.replace(
-    '<application',
-    '<application android:requestLegacyExternalStorage="true"',
-    1
-) if 'requestLegacyExternalStorage' not in content else content
-
-with open(path, 'w') as f:
-    f.write(content)
-
-print('Manifest patched successfully')
-EOF
-
-          # 7. Build
           cordova build android --debug
 
       - name: Upload APK

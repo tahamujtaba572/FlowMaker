@@ -1,4 +1,4 @@
-name: Build Clean APK with Icon
+name: Build LUMINA APK with Gallery Export
 
 on:
   push:
@@ -16,63 +16,48 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: zulu
           java-version: '17'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20'
 
-      - name: Install Cordova & Build APK with Icon
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Create Cordova App and Install Gallery Plugin
         run: |
-          npm install -g cordova
-          
-          # 1. Create Cordova project
-          cordova create app com.flow.tm "FC Maker"
-          
-          # 2. Copy ALL HTML and web files to www folder
-          cp -r *.html *.png *.jpg *.jpeg *.css *.js app/www/ 2>/dev/null || true
-          
-          # 3. Move to app directory
+          cordova create app com.flow.mt "FC Maker"
           cd app
-          
-          # Handle custom icon if it exists
-          if [ -f "../icon.png" ]; then
-            cp ../icon.png www/icon.png
-            sed -i '/<\/widget>/i \    <icon src="www/icon.png" />' config.xml
+          cordova platform add android@13.0.0
+          cordova plugin add https://github.com/boogie/cordova-plugin-boogie-photosapi.git
+
+      - name: Copy Website Files
+        run: |
+          mkdir -p app/www
+          cp -R www/. app/www/
+
+          if [ -f "icon.png" ]; then
+            cp icon.png app/www/icon.png
+            python3 - <<'PY'
+          from pathlib import Path
+          p = Path("app/config.xml")
+          xml = p.read_text(encoding="utf-8")
+          xml = xml.replace("</widget>", '    <icon src="www/icon.png" />\n</widget>')
+          p.write_text(xml, encoding="utf-8")
+          PY
           fi
-          
-          # 4. Safely add permission and preference using a secure single-line python parser
-          python3 -c '
-          import xml.etree.ElementTree as ET
-          ET.register_namespace("", "http://www.w3.org/ns/widgets")
-          tree = ET.parse("config.xml")
-          root = tree.getroot()
-          
-          # Add preference for file mode overhead
-          pref = ET.Element("preference", {"name": "AndroidInsecureFileModeOverhead", "value": "true"})
-          root.append(pref)
-          
-          # Add edit-config for storage permission
-          edit_config = ET.Element("edit-config", {
-              "file": "app/src/main/AndroidManifest.xml",
-              "mode": "merge",
-              "target": "/manifest/uses-permission[@name=\"android.permission.WRITE_EXTERNAL_STORAGE\"]"
-          })
-          uses_perm = ET.Element("uses-permission", {"android:name": "android.permission.WRITE_EXTERNAL_STORAGE", "android:maxSdkVersion": "28"})
-          edit_config.append(uses_perm)
-          root.append(edit_config)
-          
-          tree.write("config.xml", encoding="utf-8", xml_declaration=True)
-          '
-          
-          # 5. Add Android Platform & Build
-          cordova platform add android
+
+      - name: Build Android APK
+        run: |
+          cd app
           cordova build android --debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: TM-APP-APK
+          name: LUMINA-APK
           path: app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

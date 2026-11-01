@@ -34,21 +34,32 @@ jobs:
           cordova platform add android@13.0.0
           cordova plugin add https://github.com/boogie/cordova-plugin-boogie-photosapi.git
 
-      - name: Copy Website Files
+      - name: Copy Website Files from Repository Root
         run: |
           mkdir -p app/www
-          cp -R www/. app/www/
+          # Copy all files from the repository root (where index.html currently lives).
+          find . -maxdepth 1 -type f ! -name 'README.md' -exec cp -t app/www/ {} +
+          # Copy root-level asset folders if the project has any.
+          for folder in css js assets images; do
+            if [ -d "$folder" ]; then cp -R "$folder" app/www/; fi
+          done
 
           if [ -f "icon.png" ]; then
-            cp icon.png app/www/icon.png
             python3 - <<'PY'
           from pathlib import Path
           p = Path("app/config.xml")
           xml = p.read_text(encoding="utf-8")
-          xml = xml.replace("</widget>", '    <icon src="www/icon.png" />\n</widget>')
+          icon_line = '    <icon src="www/icon.png" />'
+          if icon_line not in xml:
+              xml = xml.replace("</widget>", icon_line + "\n</widget>")
           p.write_text(xml, encoding="utf-8")
           PY
           fi
+
+      - name: Verify Web App Files
+        run: |
+          test -f app/www/index.html || (echo 'ERROR: index.html was not found in the repository root.' && exit 1)
+          ls -la app/www
 
       - name: Build Android APK
         run: |

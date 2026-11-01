@@ -48,7 +48,7 @@ jobs:
           with open("config.xml", "r") as f:
               content = f.read()
           
-          permissions = """
+          snippet = """
               <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/uses-permission[@name=\\"android.permission.WRITE_EXTERNAL_STORAGE\\"]">
                   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
               </edit-config>
@@ -56,8 +56,10 @@ jobs:
           </widget>
           """
           
-          # Replace only the closing tag cleanly
-          content = content.replace("</widget>", permissions)
+          # Replace </widget> cleanly with our snippet which already contains </widget> at the end
+          if "</widget>" in content:
+              content = content.replace("</widget>", snippet, 1)
+          
           with open("config.xml", "w") as f:
               f.write(content)
           '

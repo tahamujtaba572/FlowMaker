@@ -43,9 +43,7 @@ jobs:
             sed -i '/<\/widget>/i \    <icon src="www/icon.png" />' config.xml
           fi
           
-          # Safely append storage permissions & preferences right before </widget>
-          # We use a temporary python snippet or node or python to cleanly inject without sed errors,
-          # or simply append using a clean block if config.xml uses standard closing tags.
+          # Safely append storage permissions & preferences right before </widget> using Python
           python3 -c '
           with open("config.xml", "r") as f:
               content = f.read()
@@ -58,6 +56,7 @@ jobs:
           </widget>
           """
           
+          # Replace only the closing tag cleanly
           content = content.replace("</widget>", permissions)
           with open("config.xml", "w") as f:
               f.write(content)
